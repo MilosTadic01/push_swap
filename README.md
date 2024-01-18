@@ -37,6 +37,13 @@ b: _____
 ________________________________________________
 
 ## Algorithm considerations
+### Parameters?
+Whether and how many parameters to use will depend on whether keeping track of them would be considered to lower the algorithm efficiency. But if we had our hands untied, we could consider:
+* The `largest number` / the `smallest number`
+* The `indexes` (values **0 2 8 11 13** being indexed as **0 1 2 3 4**)
+* The `how many values smaller than` the `current` 
+* The `how many values greater than` the `current` 
+
 ### 1: Bubble sort
 Wouldn't work because we don't have access to a swapping operation that can work over an entire list. `sa` only works on list indexes [0] and [1].
 ### 2: Insertion sort
@@ -54,6 +61,12 @@ We use `ra` to first send **smallest** and then keep sending larger and larger v
   * we `pb` until the smallest number comes on top of a, indicating that a is sorted so far.
   * we `rb` or `sb` or `rrb` depending which would get to `thenextnumber` more quickly. To find out, we iterated to look for it.
   * we `pa` and `ra` and the next number is sorted. Now `thenextnumber++` happens.
+* 2.a.3 verbose:
+  * **15243**
+  * `int smallest`. Calculate to determine and assign 1 as the smallest. rm from `unsorted[]`
+  * You have smallest, now look at stacks. [`smallest` happens to be within reach] <- formalize conditions here. `ra` the `smallest` => a: _5243**1** b: _____
+  * Calculate new `smallest`. Double while loop. If (number being tested) !> `unsorted[i++]` then `smallest = (number being tested)`, else test next number from the array. rm it from `unsorted[]`.
+  * You have smallest, now look at stacks. Atop **a** is not smallest, abottom **a** is smallest, atop **b** is nothing, abottom **b** is nothing. `pb` the 5 => a: _2431 b: **5**
 #### 2.b: scenario (b)
 We use `pa` to first send **largest** and then keep sending smaller and smaller values to the top of the stack a, ensuring that `pa` == sorted
   - b: 412
