@@ -62,10 +62,28 @@ We use `ra` to first send **smallest** and then keep sending larger and larger v
   * we `rb` or `sb` or `rrb` depending which would get to `thenextnumber` more quickly. To find out, we iterated to look for it.
   * we `pa` and `ra` and the next number is sorted. Now `thenextnumber++` happens.
 * 2.a.3 verbose:
-  * **15243**
-  * `int smallest`. Calculate to determine and assign 1 as the smallest. rm from `unsorted[]`
+  * **15243** => `ra` `pb` `ra` `sa` `ra` `ra` `pa` `ra`
+  * **Note**: I was convinced by Natalie to used linked lists. Which begs the question, how do you store information about the position (as in arr[pos]) in linked lists?
+  * `int smallest`, `int next`, `step count`. Calculate to determine and assign 1 as the smallest. rm from `unsorted[]`
   * You have smallest, now look at stacks. [`smallest` happens to be within reach] <- formalize conditions here. `ra` the `smallest` => a: _5243**1** b: _____
-  * Calculate new `smallest`. Double while loop. If (number being tested) !> `unsorted[i++]` then `smallest = (number being tested)`, else test next number from the array. rm it from `unsorted[]`.
+    * Formalization of "if [`smallest` happens to be within reach]"
+      * if `smallest` == a[0], then `ra`
+      * else if `smallest` == a[1];
+        * if `next` == a[0], then `sa` + `ra`
+        * else `pb` + `ra`
+      * else if `smallest` == a[z], then `0`
+      * else if `smallest` == a[z - 1], then `rra`
+      * else if `smallest` == b[0], then `pa` + `ra`
+      * else if `smallest` == b[1]
+        * if `next` == b[0], then `sb` + `pa` + `ra`
+        * else `rb` + `pa` + `ra`
+      * else if `smallest` == b[z], then `rrb` + `pa` + `ra`
+      * else if `smallest` == b[z - 1]
+      * **else** if `smallest` in **a**, then `pb`
+      * **else** if `smallest` in **b**, then `rb` or `rrb`
+        * add weigh: if b[pos] > size(b) / 2, then `rrb` until `smallest` is atop b
+        * add weigh: if b[pos] <= size(b) / 2, then `rb` until `smallest` is atop b
+  * Calculate new `smallest`, calculate new `next`. Double while loop. If (number being tested) !> `unsorted[i++]` then `smallest = (number being tested)`, else test next number from the array. rm it from `unsorted[]`.
   * You have smallest, now look at stacks. Atop **a** is not smallest, abottom **a** is smallest, atop **b** is nothing, abottom **b** is nothing. `pb` the 5 => a: _2431 b: **5**
 #### 2.b: scenario (b)
 We use `pa` to first send **largest** and then keep sending smaller and smaller values to the top of the stack a, ensuring that `pa` == sorted
