@@ -1,4 +1,5 @@
-#include "libft.h"
+#include "./libft/libft.h"
+#include "push_swap.h"
 #include <stdio.h>
 
 void	del(void *content)
@@ -12,17 +13,14 @@ int	main(void)
 {
 	t_list	*head; // <-- conventional name for the first item of the list; must be a ptr
 	t_list	*current;
-	int	*ptri = malloc(sizeof(int));
-	int	*ptrj = malloc(sizeof(int));
-	int	*ptrk = malloc(sizeof(int));
+	t_list	*prev;
 
-	*ptri = 2;
-	*ptrj = 1;
-	*ptrk = 3;
-	head = ft_lstnew((void *)ptri); // <-- note that we malloc for t_list, we just assgn the address to a
-				      // ptr to t_list; so a t_list itself does exist!
-	ft_lstadd_front(&head, ft_lstnew((void *)ptrj));
-	ft_lstadd_back(&head, ft_lstnew((void *)ptrk));
+	int i = 2;
+	int j = 1;
+	int k = 3;
+	head = ft_lstnew(&i); // <-- [obsolete notes]
+	ft_lstadd_front(&head, ft_lstnew(&j));
+	ft_lstadd_back(&head, ft_lstnew(&k));
 	printf("List length: %d\n", ft_lstsize(head));
 	current = head;
 	while (current != NULL)
@@ -30,12 +28,15 @@ int	main(void)
 		printf("Current content: %i\n", *(int *)current->content);
 		current = current->next;
 	}
-	current = head; // reset it
-	current = current->next; // set it to the node containing 2
-	ft_lstdelone(current, del); // free the mem alloc'd to the content and to the node itself
+	current = head; // reset it (general reset) to be able to iterate again
+	// next step unrelated to the general reset in the prev step.
+	prev = current;	// 1st step when about to del and bypass
+	current = current->next; // set it to the node to delete (the one containing 2)
+	ft_lstbypass(&prev, current->next); // bypass around the node to delete
+	ft_lstdelone(&current, del); // free the mem alloc'd to the node
 	current = head;
-	printf("*ptri was deleted, and so was the 2 it was pointing to\n");
-	while (current != NULL)
+	printf("the node with the pointer to the number 2 was deleted and bypassed over\n");
+		while (current != NULL)
 	{
 		printf("Current content: %i\n", *(int *)current->content);
 		current = current->next;

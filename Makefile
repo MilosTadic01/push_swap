@@ -1,6 +1,6 @@
 CC	= cc
 CFLAGS	= -Wall -Wextra -Werror
-NAME	= push_swap.a
+NAME	= libps.a
 LIBFTD	= ./libft
 SRC 	= push_swap.c
 OBJ	= $(SRC:.c=.o)
