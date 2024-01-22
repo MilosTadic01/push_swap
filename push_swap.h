@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/19 19:20:44 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/22 15:48:10 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 # include <stddef.h>
 # include "./libft/libft.h"
 
-void	push_swap(void);
+void	push_swap(int argc, char **argv);
 
 #endif

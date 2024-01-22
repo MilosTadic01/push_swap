@@ -7,6 +7,7 @@ SRC :=	ft_isalpha.c \
 	ft_isalnum.c \
 	ft_isascii.c \
 	ft_isprint.c \
+	ft_iswhite.c \
 	ft_strlen.c \
 	ft_memset.c \
 	ft_bzero.c \
@@ -39,6 +40,7 @@ SRC :=	ft_isalpha.c \
 	ft_lstnew.c \
 	ft_lstadd_front.c \
 	ft_lstsize.c \
+	ft_lstintpos.c \
 	ft_lstlast.c \
 	ft_lstadd_back.c \
 	ft_lstdelone.c \

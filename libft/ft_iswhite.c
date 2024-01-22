@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_iswhite.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/15 15:49:02 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/22 12:50:39 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/22 15:23:42 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/22 15:37:46 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list **lst, void (*del)(void *))
+int	ft_iswhite(int c)
 {
-	if (!lst || !(*lst) || !(*del))
-		return;
-	del(*lst);
-	*lst = NULL;
-	return ;
+	if (c == 32 || (c >= 9 && c <= 13))
+		return (42);
+	else
+		return (0);
 }
