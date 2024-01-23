@@ -13,7 +13,7 @@
 #include "push_swap.h"
 #include <stdio.h>
 
-void	set_list(char **argv, int size)
+t_list	*set_list(char **argv, int size)
 {
 	int	i;
 	int	j;
@@ -21,9 +21,18 @@ void	set_list(char **argv, int size)
 
 	i = 0;
 	arr = (int *)malloc(size * sizeof(int));
-	while (i < size) // should be seg safe if 'size' was gotten correctly
+	while (argv[1][i])
 	{
-		arr[j] = ft_atoi(argv[1]
+		if (ft_iswhite(argv[1][i])) // this is just handled by atoi, throw it out?
+			i++;
+		else
+		{
+			arr[j] = ft_atoi(argv[1][i]);
+			while (argv[1][i] && ft_isdigit(argv[1][i]))
+				i++;
+		}
+	}
+}
 
 
 t_list	*get_list_size(char **argv)
