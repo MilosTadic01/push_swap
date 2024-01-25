@@ -17,4 +17,18 @@
 
 void	push_swap(int argc, char **argv);
 
+typedef struct	values
+{
+	int	size;
+	int	smol;
+	int	next;
+}	vl_data;
+
+typedef struct	op_numbers
+{
+	int	pos_last;
+	int	pos_smol;
+	int	pos_next;
+}	op_data;
+
 #endif

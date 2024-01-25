@@ -40,35 +40,108 @@ t_list	*init_stk(int *arr, int size)
 	return (head);
 }
 
-void	find_n_swap(int smol, int size, t_list **stk_a, t_list **stk_b)
+void	conds_if_b(op_data *op, t_list **stk_a, t_list **stk_b)
 {
-	t_list	*head_a;
-	t_list	*head_b;
-	int	next;
-
-	next = smol;	//	<-- just shorter for me to write 'else' this way
-	if (smol < (size - 1))
-		next = (smol + 1);
-	//
-	if (smol == (int)(*stk_a)->content)
+	if (op->pos_smol == 0)
+	{
+		op_psh(*stk_b, *stk_a);
+		op_rot(*stk_b);
+	}
+	else if (op->pos_smol == 1)
+	{
+		if (op->pos_next == 0)
+		{
+			op_swp(*stk_b);
+			op_psh(*stk_b, *stk_a);
+			op_rot(*stk_a);
+		}
+		else
+		{
+			op_rot(*stk_b);
+			op_psh(*stk_b, *stk_a);
+			op_rot(*stk_a);
+		}
+	}
+	else if (op->pos_smol == op->last)
+	{
+		op_revrot(*stk_b);
+		op_psh(*stk_b, *stk_a);
 		op_rot(*stk_a);
-	else if (smol == (int)(*stk_b)->next->content)
+	}
+	else if (op->pos_smol == (op->last - 1)) // note: can happen more often
+	{
+		op_revrot(*stk_b);
+		op_revrot(*stk_b);
+		op_psh(*stk_b, *stk_a);
+		op_rot(*stk_a);
+	}
+}
 
+void	conds_if_a(op_data *op, t_list **stk_a, t_list **stk_b)
+{
+	if (op->pos_smol == 0)
+		op_rot(*stk_a);
+	else if (op->pos_smol == 1)
+	{
+		if (op->pos_next == 0)
+		{
+			op_swp(*stk_a);
+			op_rot(*stk_a);
+		}
+		else
+		{
+			op_psh(*stk_a, *stk_b);
+			op_rot(*stk_a);
+		}
+	}
+	else if (op->pos_smol == op->last)
+		return ;
+	else if (op->pos_smol == (op->last - 1)) // note: can only be the case on early runs
+		op_revrot(*stk_a);
+	// working sketch below
+	// else
+	//	return (0);
+	// return (1);
+}
+
+void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
+{
+	op_data	op;
+
+	// yeah just pos_nx first, so that when we eval pos_sm we can already call ft_conds
+	op.pos_last = vl->size - 1;
+	op.pos_next = ft_lstintpos(*stk_a, arr_ind[vl->next]);
+	if (op.pos_next == -1)
+		op.pos_next = ft_lstintpos(*stk_b, arr_ind[vl->next]);
+	op.pos_smol = ft_lstintpos(*stk_a, arr_ind[vl->smol]);
+	if (op.pos_smol == -1) // if this, then we can assume smol is in stk_b
+	{
+		op.pos_smol = ft_lstintpos(*stk_b, arr_ind[vl->smol]);
+		conds_if_b(&op, stk_a, stk_b);
+	}
+	else
+		conds_if_a(&op, stk_a, stk_b);
 }
 
 int	go_sorting(int *arr_raw, int *arr_ind, int size)
 {
 	t_list	*stk_a;
 	t_list	*stk_b;
-	int	smol;
+	vl_data	vl;
 
 	stk_a = init_stk(arr_raw, size);
 	if (!stk_a)
 		return (0);
 	stk_b = NULL;
-	smol = -1;
-	while (++smol < size)
-		find_n_swap(arr_ind[smol], size, &stk_a, &stk_b);
+	vl.size = size;
+	vl.smol = -1;
+	while (++vl.smol < size)
+	{
+		vl.next = vl.smol; // <-- just more space-efficient for me to write 'else' this way
+		if (vl.smol < (vl.size - 1))
+			vl.next = (vl.smol + 1);
+		find_n_swap(arr_ind, &vl, &stk_a, &stk_b);
+	}
 	return (1);
 }
 	
