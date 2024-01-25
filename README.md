@@ -72,13 +72,15 @@ We use `ra` to first send **smallest** and then keep sending larger and larger v
         * if `next` == a[0], then `sa` + `ra`
         * else `pb` + `ra`
       * else if `smallest` == a[z], then `0`
-      * else if `smallest` == a[z - 1], then `rra`
+      * else if `smallest` == a[z - 1]
+        * if `prev smallest` == a[z], **then what???**
+        * else `rra`
       * else if `smallest` == b[0], then `pa` + `ra`
       * else if `smallest` == b[1]
         * if `next` == b[0], then `sb` + `pa` + `ra`
         * else `rb` + `pa` + `ra`
       * else if `smallest` == b[z], then `rrb` + `pa` + `ra`
-      * else if `smallest` == b[z - 1]
+      * else if `smallest` == b[z - 1], then `rrb` + `rrb` + `pa` + `ra`
       * **else** if `smallest` in **a**, then `pb`
       * **else** if `smallest` in **b**, then `rb` or `rrb`
         * add weigh: if b[pos] > size(b) / 2, then `rrb` until `smallest` is atop b
