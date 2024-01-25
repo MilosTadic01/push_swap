@@ -37,6 +37,9 @@ int	*index_arr(int *arr_raw, int size)
 // to value, right? Ok, we need to play around with linked list first, before
 // we decide how many int arrays and which function is returning what.
 //
+// Ok scratch that, the value would change so the pointer would be useless... So
+// we do need two arrays. But still mind the homework below.
+//
 // So Homework: give members of int * to linked-list contents, then see what
 // happens when you change the values.
 
@@ -119,3 +122,25 @@ int	main(int argc, char **argv)
 	printf("Should be 0\n");
 	return (0);
 }
+
+//int	main(int argc, char **argv)
+//{
+//	int	size;
+//	int	*arr_ind;
+//	t_list	*stk_a;
+//
+//	if (error || input invalid)
+//	{
+//		print "error";
+//		return (1);
+//	}
+//	size = get_size(argv);
+//	arg_ind = handle_input(argv, size);
+//	if (malloc fail)
+//		return (2);
+//	stk_a = init_stk(arg_ind, size);
+//	if (malloc fail)
+//		return (2);
+//	if (sort_stk(stk_a ...............
+//		return (3);
+//	return (0)
