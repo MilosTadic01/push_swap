@@ -1,6 +1,7 @@
 CC = cc
 CFLAGS := -Wall -Wextra -Werror
-NAME := libft.a	
+NAME := libft.a
+LIBFTPRINTFD := ./ft_printf
 HEADER = libft.h
 SRC :=	ft_isalpha.c \
 	ft_isdigit.c \
@@ -54,6 +55,8 @@ OBJ := $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
+	make -C $(LIBFTPRINTFD) all
+	cp $(LIBFTPRINTFD)/libftprintf.a $(NAME)
 	ar rcs $(NAME) $^
 
 $(OBJ): %.o: %.c $(HEADER)
@@ -61,9 +64,11 @@ $(OBJ): %.o: %.c $(HEADER)
 
 clean:
 	rm -f *.o
+	make -C $(LIBFTPRINTFD) clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C $(LIBFTPRINTFD) fclean
 
 re: fclean all
 

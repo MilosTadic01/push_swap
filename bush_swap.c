@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   bush_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/23 18:36:14 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/26 18:18:49 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,36 +81,36 @@ int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 {
 	if (op->pos_smol == 0)
 	{
-		op_psh(stk_b, stk_a);
-		op_rot(stk_b);
+		op_psh('a', stk_b, stk_a);
+		op_rot('a', stk_a);
 	}
 	else if (op->pos_smol == 1)
 	{
 		if (op->pos_next == 0)
 		{
-			op_swp(stk_b);
-			op_psh(stk_b, stk_a);
-			op_rot(stk_a);
+			op_swp('b', stk_b);
+			op_psh('a', stk_b, stk_a);
+			op_rot('a', stk_a);
 		}
 		else
 		{
-			op_rot(stk_b);
-			op_psh(stk_b, stk_a);
-			op_rot(stk_a);
+			op_rot('b', stk_b);
+			op_psh('a', stk_b, stk_a);
+			op_rot('a', stk_a);
 		}
 	}
 	else if (op->pos_smol == op->last)
 	{
-		op_revrot(stk_b);
-		op_psh(stk_b, stk_a);
-		op_rot(stk_a);
+		op_revrot('b', stk_b);
+		op_psh('a', stk_b, stk_a);
+		op_rot('a', stk_a);
 	}
 	else if (op->pos_smol == (op->last - 1)) // note: may happen always
 	{
-		op_revrot(stk_b);
-		op_revrot(stk_b);
-		op_psh(stk_b, stk_a);
-		op_rot(stk_a);
+		op_revrot('b', stk_b);
+		op_revrot('b', stk_b);
+		op_psh('a', stk_b, stk_a);
+		op_rot('a', stk_a);
 	}
 	else
 	{
@@ -128,15 +128,15 @@ void	conds_b_weigh(op_data *op, t_list **stk_a, t_list **stk_b)
 	if (op->pos_smol > op->last / 2)
 	{
 		while (++i <= (op->pos_last - op->pos_smol)) // key difference: '='
-			op_revrot(stk_b);
+			op_revrot('b', stk_b);
 	}
 	else
 	{
 		while (++i < op->pos_smol)
-			op_rot(stk_b);
+			op_rot('b', stk_b);
 	}
-	op_psh(stk_b, stk_a);
-	op_rot(stk_a);
+	op_psh('a', stk_b, stk_a);
+	op_rot('a', stk_a);
 }
 
 void	conds_a_weigh(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
@@ -147,37 +147,37 @@ void	conds_a_weigh(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 	if (*step == 0 && op->pos_smol > op->last / 2)
 	{
 		while (++i < (op->pos_last - op->pos_smol))
-			op_revrot(stk_a);
+			op_revrot('a', stk_a);
 	}
 	else
 	{
 		while (++i < op->pos_smol)
-			op_psh(stk_a, stk_b);
-		op_rot(stk_a);
+			op_psh('b', stk_a, stk_b);
+		op_rot('a', stk_a);
 	}
 }
 
 int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 {
 	if (op->pos_smol == 0)
-		op_rot(stk_a);
+		op_rot('a', stk_a);
 	else if (op->pos_smol == 1)
 	{
 		if (op->pos_next == 0)
 		{
-			op_swp(stk_a);
-			op_rot(stk_a);
+			op_swp('a', stk_a);
+			op_rot('a', stk_a);
 		}
 		else
 		{
-			op_psh(stk_a, stk_b);
-			op_rot(stk_a);
+			op_psh('b', stk_a, stk_b);
+			op_rot('a', stk_a);
 		}
 	}
 	else if (op->pos_smol == op->last)
 		;
 	else if (*step == 0 && op->pos_smol == (op->last - 1)) // note: may only happen if 0th step
-		op_revrot(stk_a);
+		op_revrot('a', stk_a);
 	// else if (*step == 0 && op->pos_smol > op->last / 2) <-- implied smol is in a.
 	//	loop until op_revrot(stk_a);
 	else
@@ -355,6 +355,8 @@ int	main(int argc, char **argv)
 	int	*arr_raw;
 	int	*arr_ind;
 
+	if (argc == 1) // specified in the pdf as "do nothing if no parameters"
+		return ;
 	if (argc != 2 || !input_valid(argv))
 	{
 		ft_printf("Error\n");
