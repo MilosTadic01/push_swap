@@ -59,48 +59,58 @@ t_list	*init_stk(int *arr, int size)
 {
 	int	i;
 	t_list	*head;
+	t_list	*new;
 
 	i = -1;
 	head = NULL;
 	while (++i < size)
-		ft_lstadd_back(head, ft_lstnew(arr[i]));
+	{
+		new = NULL;
+		new = ft_lstnew(arr[i]);
+		if (!new)
+		{
+			ft_lstclear(&head, del);
+			return (NULL);
+		}
+		ft_lstadd_back(&head, new);
+	}
 	return (head);
 }
 
-void	conds_if_b(op_data *op, t_list **stk_a, t_list **stk_b)
+int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 {
 	if (op->pos_smol == 0)
 	{
-		op_psh(*stk_b, *stk_a);
-		op_rot(*stk_b);
+		op_psh(stk_b, stk_a);
+		op_rot(stk_b);
 	}
 	else if (op->pos_smol == 1)
 	{
 		if (op->pos_next == 0)
 		{
-			op_swp(*stk_b);
-			op_psh(*stk_b, *stk_a);
-			op_rot(*stk_a);
+			op_swp(stk_b);
+			op_psh(stk_b, stk_a);
+			op_rot(stk_a);
 		}
 		else
 		{
-			op_rot(*stk_b);
-			op_psh(*stk_b, *stk_a);
-			op_rot(*stk_a);
+			op_rot(stk_b);
+			op_psh(stk_b, stk_a);
+			op_rot(stk_a);
 		}
 	}
 	else if (op->pos_smol == op->last)
 	{
-		op_revrot(*stk_b);
-		op_psh(*stk_b, *stk_a);
-		op_rot(*stk_a);
+		op_revrot(stk_b);
+		op_psh(stk_b, stk_a);
+		op_rot(stk_a);
 	}
-	else if (op->pos_smol == (op->last - 1)) // note: can happen more often
+	else if (op->pos_smol == (op->last - 1)) // note: may happen always
 	{
-		op_revrot(*stk_b);
-		op_revrot(*stk_b);
-		op_psh(*stk_b, *stk_a);
-		op_rot(*stk_a);
+		op_revrot(stk_b);
+		op_revrot(stk_b);
+		op_psh(stk_b, stk_a);
+		op_rot(stk_a);
 	}
 	else
 	{
@@ -110,27 +120,66 @@ void	conds_if_b(op_data *op, t_list **stk_a, t_list **stk_b)
 	return (*step++);
 }
 
-void	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
+void	conds_b_weigh(op_data *op, t_list **stk_a, t_list **stk_b)
+{
+	int	i;
+
+	i = -1;
+	if (op->pos_smol > op->last / 2)
+	{
+		while (++i <= (op->pos_last - op->pos_smol)) // key difference: '='
+			op_revrot(stk_b);
+	}
+	else
+	{
+		while (++i < op->pos_smol)
+			op_rot(stk_b);
+	}
+	op_psh(stk_b, stk_a);
+	op_rot(stk_a);
+}
+
+void	conds_a_weigh(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
+{
+	int	i;
+
+	i = -1;
+	if (*step == 0 && op->pos_smol > op->last / 2)
+	{
+		while (++i < (op->pos_last - op->pos_smol))
+			op_revrot(stk_a);
+	}
+	else
+	{
+		while (++i < op->pos_smol)
+			op_psh(stk_a, stk_b);
+		op_rot(stk_a);
+	}
+}
+
+int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 {
 	if (op->pos_smol == 0)
-		op_rot(*stk_a);
+		op_rot(stk_a);
 	else if (op->pos_smol == 1)
 	{
 		if (op->pos_next == 0)
 		{
-			op_swp(*stk_a);
-			op_rot(*stk_a);
+			op_swp(stk_a);
+			op_rot(stk_a);
 		}
 		else
 		{
-			op_psh(*stk_a, *stk_b);
-			op_rot(*stk_a);
+			op_psh(stk_a, stk_b);
+			op_rot(stk_a);
 		}
 	}
 	else if (op->pos_smol == op->last)
 		;
-	else if (*step == 0 && op->pos_smol == (op->last - 1)) // note: may only happen if 1st step
-		op_revrot(*stk_a);
+	else if (*step == 0 && op->pos_smol == (op->last - 1)) // note: may only happen if 0th step
+		op_revrot(stk_a);
+	// else if (*step == 0 && op->pos_smol > op->last / 2) <-- implied smol is in a.
+	//	loop until op_revrot(stk_a);
 	else
 	{
 		*step++;
@@ -151,15 +200,15 @@ void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
 	if (op.pos_next == -1)
 		op.pos_next = ft_lstintpos(*stk_b, arr_ind[vl->next]);
 	op.pos_last = vl->size - 1;
-	if (" is in b ") // how
+	if (ft_lstintpos(*stk_a, arr_ind[vl->smol]) != -1);
 	{
-		if (!conds_if_b(&op, &step, *stk_a, *stk_b))
-			conds_b_weigh(&op, &step, *stk_a, *stk_b);
+		if (!conds_if_a(&op, &step, stk_a, stk_b))
+			conds_a_weigh(&op, &step, stk_a, stk_b);
 	}
 	else
 	{
-		if (!conds_if_a(&op, &step, *stk_a, *stk_b))
-			conds_a_weigh(&op, &step, *stk_a, *stk_b);
+		if (!conds_if_b(&op, &step, stk_a, stk_b))
+			conds_b_weigh(&op, stk_a, stk_b);
 	}
 }
 
