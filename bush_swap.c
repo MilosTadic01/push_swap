@@ -13,7 +13,34 @@
 #include "push_swap.h"
 #include <stdio.h>
 
-void	free_arrays(int *arr_raw, int *arr_ind)
+int	buffover(const char *nptr)
+{
+	long long	l;
+	int		minus;
+	
+	l = 0;
+	minus = 1;
+	while ((*nptr >= 9 && *nptr <= 13) || (*nptr == 32))
+		nptr++;
+	if (*nptr == 45 || *nptr == 43)
+	{
+		if (*nptr == 45)
+			minus = -1;
+		nptr++;
+	}
+	while (*nptr >= 48 && *nptr <= 57)
+	{
+		l += *nptr - 48;
+		l *= 10;
+		nptr++;
+	}
+	l = l / 10 * minus;
+	if (l > INT_MAX || l < INT_MIN)
+		return (1);
+	return (0);
+}
+
+void	*free_arrays(int *arr_raw, int *arr_ind)
 {
 	if (arr_raw)
 	{
@@ -25,7 +52,7 @@ void	free_arrays(int *arr_raw, int *arr_ind)
 		free (arr_ind);
 		arr_ind = NULL;
 	}
-	return ;
+	return (NULL);
 }
 
 t_list	*init_stk(int *arr, int size)
@@ -75,9 +102,15 @@ void	conds_if_b(op_data *op, t_list **stk_a, t_list **stk_b)
 		op_psh(*stk_b, *stk_a);
 		op_rot(*stk_a);
 	}
+	else
+	{
+		*step++;
+		return (0);
+	}
+	return (*step++);
 }
 
-void	conds_if_a(op_data *op, t_list **stk_a, t_list **stk_b)
+void	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 {
 	if (op->pos_smol == 0)
 		op_rot(*stk_a);
@@ -95,32 +128,39 @@ void	conds_if_a(op_data *op, t_list **stk_a, t_list **stk_b)
 		}
 	}
 	else if (op->pos_smol == op->last)
-		return ;
-	else if (op->pos_smol == (op->last - 1)) // note: can only be the case on early runs
+		;
+	else if (*step == 0 && op->pos_smol == (op->last - 1)) // note: may only happen if 1st step
 		op_revrot(*stk_a);
-	// working sketch below
-	// else
-	//	return (0);
-	// return (1);
+	else
+	{
+		*step++;
+		return (0);
+	}
+	return (*step++);
 }
 
 void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
 {
+	static int	step = 0;
 	op_data	op;
 
-	// yeah just pos_nx first, so that when we eval pos_sm we can already call ft_conds
-	op.pos_last = vl->size - 1;
+	op.pos_smol = ft_lstintpos(*stk_a, arr_ind[vl->smol]);
+	if (op.pos_smol == -1)
+		op.pos_smol = ft_lstintpos(*stk_b, arr_ind[vl->smol]);
 	op.pos_next = ft_lstintpos(*stk_a, arr_ind[vl->next]);
 	if (op.pos_next == -1)
 		op.pos_next = ft_lstintpos(*stk_b, arr_ind[vl->next]);
-	op.pos_smol = ft_lstintpos(*stk_a, arr_ind[vl->smol]);
-	if (op.pos_smol == -1) // if this, then we can assume smol is in stk_b
+	op.pos_last = vl->size - 1;
+	if (" is in b ") // how
 	{
-		op.pos_smol = ft_lstintpos(*stk_b, arr_ind[vl->smol]);
-		conds_if_b(&op, stk_a, stk_b);
+		if (!conds_if_b(&op, &step, *stk_a, *stk_b))
+			conds_b_weigh(&op, &step, *stk_a, *stk_b);
 	}
 	else
-		conds_if_a(&op, stk_a, stk_b);
+	{
+		if (!conds_if_a(&op, &step, *stk_a, *stk_b))
+			conds_a_weigh(&op, &step, *stk_a, *stk_b);
+	}
 }
 
 int	go_sorting(int *arr_raw, int *arr_ind, int size)
@@ -211,7 +251,9 @@ int	*handle_input(char **argv, int size)
 			i++;
 		else
 		{
-			arr_raw[j] = ft_atoi(&argv[1][i]);
+			if (buffover(argv[1][i])
+				return (free_arrays(arr_raw, NULL);
+			arr_raw[j] = ft_atoi(argv[1][i]); // <-- was '&argv' b4. Why. Don't.
 			while (argv[1][i] && ft_isdigit(argv[1][i]))
 				i++;
 			j++;
@@ -264,7 +306,7 @@ int	main(int argc, char **argv)
 	int	*arr_raw;
 	int	*arr_ind;
 
-	if (error || !input_valid(argv))
+	if (argc != 2 || !input_valid(argv))
 	{
 		ft_printf("Error\n");
 		return (1);
@@ -278,7 +320,7 @@ int	main(int argc, char **argv)
 		return (2);
 	if (!go_sorting(arr_raw, arr_ind, size))
 	{
-		free_arrays(arr_raw, arr_ind);
+		arr_raw = free_arrays(arr_raw, arr_ind);
 		return (3);
 	}
 	return (0);
