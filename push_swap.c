@@ -6,44 +6,324 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/23 18:36:14 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/26 18:18:49 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 #include <stdio.h>
 
-// ultimately how to check the next smallest
-i++;
-smallest = arr_ind[i];
-// that's it bby; that's why we make that presorted arr_ind
+void	del(void *content)
+{
+	if (content)
+		free(content);
+	return ;
+}
+
+int	buffover(const char *nptr)
+{
+	long long	l;
+	int		minus;
+	
+	l = 0;
+	minus = 1;
+	while ((*nptr >= 9 && *nptr <= 13) || (*nptr == 32))
+		nptr++;
+	if (*nptr == 45 || *nptr == 43)
+	{
+		if (*nptr == 45)
+			minus = -1;
+		nptr++;
+	}
+	while (*nptr >= 48 && *nptr <= 57)
+	{
+		l += *nptr - 48;
+		l *= 10;
+		nptr++;
+	}
+	l = l / 10 * minus;
+	if (l > INT_MAX || l < INT_MIN)
+		return (1);
+	return (0);
+}
+
+void	*free_arrays(int *arr_raw, int *arr_ind)
+{
+	if (arr_raw)
+	{
+		free (arr_raw);
+		arr_raw = NULL;
+	}
+	if (arr_ind)
+	{
+		free (arr_ind);
+		arr_ind = NULL;
+	}
+	return (NULL);
+}
+
+t_list	*init_stk(int *arr, int size)
+{
+	int	i;
+	t_list	*head;
+	t_list	*new;
+
+	i = -1;
+	head = NULL;
+	while (++i < size)
+	{
+		new = NULL;
+		new = ft_lstnew(&(arr[i]));
+		if (!new)
+		{
+			ft_lstclear(&head, del);
+			return (NULL);
+		}
+		ft_lstadd_back(&head, new);
+	}
+	return (head);
+}
+
+int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
+{
+	if (op->pos_smol == 0)
+	{
+		op_psh(stk_b, stk_a);
+		op_rot(stk_a);
+		ft_printf("pa\nra\n");
+	}
+	else if (op->pos_smol == 1)
+	{
+		if (op->pos_next == 0)
+		{
+			op_swp(stk_b);
+			op_psh(stk_b, stk_a);
+			op_rot(stk_a);
+			ft_printf("sb\npa\nra\n");
+		}
+		else
+		{
+			op_rot(stk_b);
+			op_psh(stk_b, stk_a);
+			op_rot(stk_a);
+			ft_printf("rb\npa\nra\n");
+		}
+	}
+	else if (op->pos_smol == op->pos_last)
+	{
+		op_revrot(stk_b);
+		op_psh(stk_b, stk_a);
+		op_rot(stk_a);
+		ft_printf("rrb\npa\nra\n");
+	}
+	else if (op->pos_smol == (op->pos_last - 1)) // note: may happen always
+	{
+		op_revrot(stk_b);
+		op_revrot(stk_b);
+		op_psh(stk_b, stk_a);
+		op_rot(stk_a);
+		ft_printf("rrb\nrrb\npa\nra\n");
+	}
+	else
+	{
+		(*step)++;
+		return (0);
+	}
+	return (++(*step));
+}
+
+void	conds_b_weigh(op_data *op, t_list **stk_a, t_list **stk_b)
+{
+	int	i;
+
+	i = -1;
+	if (op->pos_smol > op->pos_last / 2)
+	{
+		while (++i <= (op->pos_last - op->pos_smol)) // key difference: '='
+		{
+			op_revrot(stk_b);
+			ft_printf("rrb\n");
+		}
+	}
+	else
+	{
+		while (++i < op->pos_smol)
+		{
+			op_rot(stk_b);
+			ft_printf("rb\n");
+		}
+	}
+	op_psh(stk_b, stk_a);
+	op_rot(stk_a);
+	ft_printf("pa\nra\n");
+}
+
+void	conds_a_weigh(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
+{
+	int	i;
+
+	i = -1;
+	if (*step == 0 && op->pos_smol > op->pos_last / 2)
+	{
+		while (++i < (op->pos_last - op->pos_smol))
+		{
+			op_revrot(stk_a);
+			ft_printf("rra\n");
+		}
+	}
+	else
+	{
+		while (++i < op->pos_smol)
+		{
+			op_psh(stk_a, stk_b);
+			ft_printf("pb\n");
+		}
+		op_rot(stk_a);
+		ft_printf("ra\n");
+	}
+}
+
+int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
+{
+	if (op->pos_smol == 0)
+	{
+		op_rot(stk_a);
+		ft_printf("ra\n");
+	}
+	else if (op->pos_smol == 1)
+	{
+		if (op->pos_next == 0)
+		{
+			op_swp(stk_a);
+			op_rot(stk_a);
+			ft_printf("sa\nra\n");
+		}
+		else
+		{
+			op_psh(stk_a, stk_b);
+			op_rot(stk_a);
+			ft_printf("pb\nra\n");
+		}
+	}
+	else if (op->pos_smol == op->pos_last)
+		;
+	else if (*step == 0 && op->pos_smol == (op->pos_last - 1)) // note: may only happen if 0th step
+	{
+		op_revrot(stk_a);
+		ft_printf("rra\n");
+	}
+	// else if (*step == 0 && op->pos_smol > op->pos_last / 2) <-- implied smol is in a.
+	//	loop until op_revrot(stk_a);
+	else
+	{
+		(*step)++;
+		return (0);
+	}
+	return (++(*step));
+}
+
+void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
+{
+	static int	step = 0;
+	op_data	op;
+
+	op.pos_smol = ft_lstintpos(*stk_a, arr_ind[vl->smol]);
+	if (op.pos_smol == -1)
+		op.pos_smol = ft_lstintpos(*stk_b, arr_ind[vl->smol]);
+	op.pos_next = ft_lstintpos(*stk_a, arr_ind[vl->next]);
+	if (op.pos_next == -1)
+		op.pos_next = ft_lstintpos(*stk_b, arr_ind[vl->next]);
+	op.pos_last = vl->size - 1;
+	if (ft_lstintpos(*stk_a, arr_ind[vl->smol]) != -1)
+	{
+		if (!conds_if_a(&op, &step, stk_a, stk_b))
+			conds_a_weigh(&op, &step, stk_a, stk_b);
+	}
+	else
+	{
+		if (!conds_if_b(&op, &step, stk_a, stk_b))
+			conds_b_weigh(&op, stk_a, stk_b);
+	}
+}
+
+int	go_sorting(int *arr_raw, int *arr_ind, int size)
+{
+	t_list	*stk_a;
+	t_list	*stk_b;
+	vl_data	vl;
+
+	stk_a = init_stk(arr_raw, size);
+	if (!stk_a)
+		return (0);
+	stk_b = NULL;
+	vl.size = size;
+	vl.smol = -1;
+	while (++vl.smol < size)
+	{
+		vl.next = vl.smol; // <-- just more space-efficient for me to write 'else' this way
+		if (vl.smol < (vl.size - 1))
+			vl.next = (vl.smol + 1);
+		find_n_swap(arr_ind, &vl, &stk_a, &stk_b);
+	}
+	while (stk_a) //
+	{
+		ft_printf("Content: %i\n", *(int *)stk_a->content); //
+		stk_a = stk_a->next; //
+	} //
+	ft_lstclear(&stk_a, del);
+	return (1);
+}
+	
+
+
+void	ft_bubble_sort(int *arr, int size)
+{
+	int	i;
+	int	buff;
+	int	swap;
+
+	if (!arr)
+		return ;
+	swap = 1;
+	while (swap == 1)
+	{
+		i = -1;
+		swap = 0;
+		while (++i < (size - 1))
+		{
+			if (arr[i] > arr[i + 1])
+			{
+				buff = arr[i];
+				arr[i] = arr[i + 1];
+				arr[i + 1] = buff;
+				swap = 1;
+			}
+		}
+	}
+}
+
 
 int	*index_arr(int *arr_raw, int size)
 {
 	int	i;
-	int	smol;
+	// int	buff;
 	int	*arr_ind;
 
 	i = -1;
 	arr_ind = (int *)malloc(sizeof(int) * size);
-	while (++i < size)
+	if (!arr_ind)
 	{
-		if (i > 0 && arr_raw) 
-		arr_ind[i] = arr_raw[i]
+		free (arr_raw);
+		return (NULL);
+	}
+	while (++i < size)
+		arr_ind[i] = arr_raw[i];
+	ft_bubble_sort(arr_ind, size);
+	return (arr_ind);
 }
 
-// Heed this: maybe we don't even need two arrays! If we just linked-list to the
-// unsorted values, because that's what we need, then the linked list is pointing
-// to value, right? Ok, we need to play around with linked list first, before
-// we decide how many int arrays and which function is returning what.
-//
-// Ok scratch that, the value would change so the pointer would be useless... So
-// we do need two arrays. But still mind the homework below.
-//
-// So Homework: give members of int * to linked-list contents, then see what
-// happens when you change the values.
 
-int	*conv_n_index(char **argv, int size)
+int	*handle_input(char **argv, int size)
 {
 	int	i;
 	int	j;
@@ -60,22 +340,22 @@ int	*conv_n_index(char **argv, int size)
 			i++;
 		else
 		{
-			arr_raw[j] = ft_atoi(&argv[1][i]);
+			if (buffover(&argv[1][i]))
+				return (free_arrays(arr_raw, NULL));
+			arr_raw[j] = ft_atoi(&argv[1][i]); // <-- doch, '&argv'
 			while (argv[1][i] && ft_isdigit(argv[1][i]))
 				i++;
 			j++;
 		}
 	}
-	return (index_arr(arr_raw, size));
+	return (arr_raw);
 }
 
 
-void	work_list(char **argv)
+int	get_size(char **argv)
 {
 	int	i;
 	int	size;
-	char	*arr_ind;
-	// t_list	*lst;
 
 	i = 0;
 	size = 0;
@@ -90,9 +370,7 @@ void	work_list(char **argv)
 			size++;
 		}
 	}
-	arr_ind = conv_n_index(argv, size);
-	// lst = set_list(argv, size);
-	// return (lst);
+	return (size);
 }
 
 int	input_valid(char **argv)
@@ -113,34 +391,38 @@ int	input_valid(char **argv)
 
 int	main(int argc, char **argv)
 {
+	int	size;
+	int	*arr_raw;
+	int	*arr_ind;
+
+	if (argc == 1) // specified in the pdf as "do nothing if no parameters"
+		return (1);
 	if (argc != 2 || !input_valid(argv))
 	{
 		ft_printf("Error\n");
 		return (1);
 	}
-	work_list(argv);
-	printf("Should be 0\n");
+	size = get_size(argv);
+	arr_raw = handle_input(argv, size);
+	if (!arr_raw)
+		return (2);
+	arr_ind = index_arr(arr_raw, size);
+	if (!arr_ind)
+		return (2);
+	if (!go_sorting(arr_raw, arr_ind, size))
+	{
+		arr_raw = free_arrays(arr_raw, arr_ind);
+		return (3);
+	}
 	return (0);
 }
 
-//int	main(int argc, char **argv)
-//{
-//	int	size;
-//	int	*arr_ind;
-//	t_list	*stk_a;
-//
-//	if (error || input invalid)
-//	{
-//		print "error";
-//		return (1);
-//	}
-//	size = get_size(argv);
-//	arg_ind = handle_input(argv, size);
-//	if (malloc fail)
-//		return (2);
-//	stk_a = init_stk(arg_ind, size);
-//	if (malloc fail)
-//		return (2);
-//	if (sort_stk(stk_a ...............
-//		return (3);
-//	return (0)
+
+// So Homework: give members of int * to linked-list contents, then see what
+// happens when you change the values.
+
+
+// ultimately how to check the next smallest
+// i++;
+// smallest = arr_ind[i];
+// that's it bby; that's why we make that presorted arr_ind

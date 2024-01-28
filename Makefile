@@ -1,20 +1,17 @@
 CC	= cc
-CFLAGS	= -Wall -Wextra -Werror
-NAME	= libps.a
+CFLAGS	= -Wall -Wextra -Werror -g
+NAME	= push_swap
 LIBFTD	= ./libft
-SRC 	= push_swap.c
-OBJ	= $(SRC:.c=.o)
+SRC 	= push_swap.c \
+	  operands.c
 HEADER	= push_swap.h
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(SRC) $(HEADER)
 	make -C $(LIBFTD) all
 	cp $(LIBFTD)/libft.a $(NAME)
-	ar rcs $(NAME) $^
-
-$(OBJ): %.o: %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(SRC) -L$(LIBFTD) -lft -o $(NAME)
 
 clean:
 	rm -f *.o

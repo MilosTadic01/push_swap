@@ -12,11 +12,12 @@
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
-# include <stddef.h>
 # include "./libft/libft.h"
+# include <limits.h>
 
 void	push_swap(int argc, char **argv);
 
+// size (no. of members); (current) smallest value; next - 2nd smallest value;
 typedef struct	values
 {
 	int	size;
@@ -30,5 +31,10 @@ typedef struct	op_numbers
 	int	pos_smol;
 	int	pos_next;
 }	op_data;
+
+int	op_psh(t_list **stk_src, t_list **stk_dst);
+int	op_rot(t_list **stk);
+int	op_swp(t_list **stk);
+int	op_revrot(t_list **stk);
 
 #endif
