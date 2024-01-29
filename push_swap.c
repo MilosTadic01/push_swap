@@ -20,6 +20,20 @@ void	del(void *content)
 	return ;
 }
 
+int	isunsorted(t_list *sta, int end)
+{
+	int	i;
+
+	i = -1;
+	while (sta && sta->next && ++i < end)
+	{
+		if (*(int *)sta->content >= *(int *)sta->next->content)
+			return (1);
+		sta = sta->next;
+	}
+	return (0);	// if NULL passed or *stk->next == NULL, (0) is the desired outcome
+}
+
 int	buffover(const char *nptr)
 {
 	long long	l;
@@ -101,6 +115,13 @@ int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 			op_rot(stk_a);
 			ft_printf("sb\npa\nra\n");
 		}
+		if (op->pos_next == 2)
+		{
+			op_rot(stk_b);
+			op_psh(stk_b, stk_a);
+			op_rot(stk_a);
+			ft_printf("rb\npa\nra\n");
+		}
 		else
 		{
 			op_rot(stk_b);
@@ -126,7 +147,7 @@ int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 	}
 	else
 	{
-		(*step)++;
+		++(*step);
 		return (0);
 	}
 	return (++(*step));
@@ -194,9 +215,17 @@ int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 	{
 		if (op->pos_next == 0)
 		{
-			op_swp(stk_a);
-			op_rot(stk_a);
-			ft_printf("sa\nra\n");
+			if (!(*stk_b) && !isunsorted((*stk_a)->next->next, INT_MAX))
+			{
+				op_swp(stk_a);
+				ft_printf("sa\n");
+			}
+			else
+			{
+				op_swp(stk_a);
+				op_rot(stk_a);
+				ft_printf("sa\nra\n");
+			}
 		}
 		else
 		{
@@ -204,6 +233,14 @@ int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 			op_rot(stk_a);
 			ft_printf("pb\nra\n");
 		}
+	}
+	else if (*step == 0 && op->pos_next == (op->pos_last - 1) && \
+			op->pos_smol == (op->pos_last) && !isunsorted(*stk_a, op->pos_last - 2))
+	{
+		op_revrot(stk_a);
+		op_revrot(stk_a);
+		op_swp(stk_a);
+		ft_printf("rra\nrra\nsa\n");
 	}
 	else if (op->pos_smol == op->pos_last)
 		;
@@ -216,7 +253,7 @@ int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 	//	loop until op_revrot(stk_a);
 	else
 	{
-		(*step)++;
+		++(*step);
 		return (0);
 	}
 	return (++(*step));
@@ -233,14 +270,16 @@ void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
 	op.pos_next = ft_lstintpos(*stk_a, arr_ind[vl->next]);
 	if (op.pos_next == -1)
 		op.pos_next = ft_lstintpos(*stk_b, arr_ind[vl->next]);
-	op.pos_last = vl->size - 1;
+	// op.pos_last = vl->size - 1; <--obsoleted inside conditions below
 	if (ft_lstintpos(*stk_a, arr_ind[vl->smol]) != -1)
 	{
+		op.pos_last = ft_lstsize(*stk_a) - 1;
 		if (!conds_if_a(&op, &step, stk_a, stk_b))
 			conds_a_weigh(&op, &step, stk_a, stk_b);
 	}
 	else
 	{
+		op.pos_last = ft_lstsize(*stk_b) - 1;
 		if (!conds_if_b(&op, &step, stk_a, stk_b))
 			conds_b_weigh(&op, stk_a, stk_b);
 	}
@@ -261,9 +300,11 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 	while (++vl.smol < size)
 	{
 		vl.next = vl.smol; // <-- just more space-efficient for me to write 'else' this way
-		if (vl.smol < (vl.size - 1))
+		if (vl.smol < (size - 1))
 			vl.next = (vl.smol + 1);
 		find_n_swap(arr_ind, &vl, &stk_a, &stk_b);
+		if (!stk_b && !isunsorted(stk_a, INT_MAX))
+			break;
 	}
 	while (stk_a) //
 	{
@@ -356,17 +397,19 @@ int	get_size(char **argv)
 {
 	int	i;
 	int	size;
+	char	c;
 
 	i = 0;
 	size = 0;
 	while (argv[1][i])
 	{
-		if (ft_iswhite(argv[1][i]))
+		c = argv[1][i];
+		if (ft_iswhite(c))
 			i++;
 		else
 		{
-			while (argv[1][i] && ft_isdigit(argv[1][i]))
-				i++;
+			while (c != 0 && (ft_isdigit(c) || c == 43 || c == 45))
+				c = argv[1][++i];
 			size++;
 		}
 	}
@@ -382,8 +425,8 @@ int	input_valid(char **argv)
 	while (argv[1][++i])
 	{
 		c = argv[1][i];
-		if (!(ft_isdigit(c) || ft_iswhite(c)) || ((c == 43 || \
-				c == 45) && !(ft_isdigit(argv[1][i + 1]))))
+		if (!((ft_isdigit(c) || ft_iswhite(c)) || c == 43 || \
+				c == 45) && (ft_isdigit(argv[1][i + 1])))
 			return (0);
 	}
 	return (1);

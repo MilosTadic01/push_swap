@@ -17,7 +17,7 @@ int	op_psh(t_list **stk_src, t_list **stk_dst)
 	t_list	*new_src_head;
 	t_list	*new_dst_head;
 
-	if (*stk_src == NULL || (*stk_src)->next == NULL)
+	if (*stk_src == NULL)
 		return (0);
 	new_src_head = (*stk_src)->next;// val: src[1]
 	new_dst_head = *stk_src;	// val: src[0]
