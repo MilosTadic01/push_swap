@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/26 18:18:49 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:01:35 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -378,6 +378,42 @@ int	*index_arr(int *arr_raw, int size)
 	return (arr_ind);
 }
 
+int	dupes_present(int *arr, int size)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < (size - 1))
+	{
+		j = i;
+		while (++j < size)
+		{
+			if (arr[i] == arr[j])
+				return (1);
+		}
+	}
+	return (0);
+}
+
+int	handle_input_brain(int *i, int *j, char **argv, int *arr_raw)
+{
+	char	c;
+
+	c = argv[1][*i];
+	if (ft_iswhite(c))
+		++(*i);
+	else
+	{
+		if (buffover(&argv[1][*i]))
+			return (0);
+		arr_raw[*j] = ft_atoi(&argv[1][*i]); // <-- doch, '&argv'
+		while (c != 0 && (ft_isdigit(c) || ft_isplusminus(c)))
+			c = argv[1][++(*i)];
+		++(*j);
+	}
+	return (1);
+}
 
 int	*handle_input(char **argv, int size)
 {
@@ -392,19 +428,11 @@ int	*handle_input(char **argv, int size)
 		return (NULL);
 	while (argv[1][i])
 	{
-		if (ft_iswhite(argv[1][i]))
-			i++;
-		else
-		{
-			if (buffover(&argv[1][i]))
-				return (free_arrays(arr_raw, NULL));
-			arr_raw[j] = ft_atoi(&argv[1][i]); // <-- doch, '&argv'
-			while (argv[1][i] && (ft_isdigit(argv[1][i]) || \
-					argv[1][i] == 43 || argv[1][i] == 45))
-				i++;
-			j++;
-		}
+		if (handle_input_brain(&i, &j, argv, arr_raw) == 0)
+			return(free_arrays(arr_raw, NULL));
 	}
+	if (dupes_present(arr_raw, size))
+		return (free_arrays(arr_raw, NULL));
 	return (arr_raw);
 }
 
@@ -432,7 +460,7 @@ int	get_size(char **argv)
 	return (size);
 }
 
-int	input_valid(char **argv)
+int	input_str_valid(char **argv)
 {
 	int		i;
 	char	c;
@@ -457,7 +485,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 1) // specified in the pdf as "do nothing if no parameters"
 		return (1);
-	if (argc != 2 || !input_valid(argv))
+	if (argc != 2 || !input_str_valid(argv))
 	{
 		ft_printf("Error\n");
 		return (1);

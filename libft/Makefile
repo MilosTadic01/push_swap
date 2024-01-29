@@ -9,6 +9,7 @@ SRC :=	ft_isalpha.c \
 	ft_isascii.c \
 	ft_isprint.c \
 	ft_iswhite.c \
+	ft_isplusminus.c \
 	ft_strlen.c \
 	ft_memset.c \
 	ft_bzero.c \
