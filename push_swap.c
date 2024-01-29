@@ -115,7 +115,7 @@ int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 			op_rot(stk_a);
 			ft_printf("sb\npa\nra\n");
 		}
-		if (op->pos_next == 2)
+		else if (op->pos_next == 2)
 		{
 			op_rot(stk_b);
 			op_psh(stk_b, stk_a);
@@ -208,14 +208,23 @@ int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 {
 	if (op->pos_smol == 0)
 	{
-		op_rot(stk_a);
-		ft_printf("ra\n");
+		if (op->pos_next == op->pos_last && !isunsorted((*stk_a)->next, op->pos_last - 1 - 1))
+		{
+			op_revrot(stk_a);
+			op_swp(stk_a);
+			ft_printf("rra\nsa\n");
+		}
+		else
+		{
+			op_rot(stk_a);
+			ft_printf("ra\n");
+		}
 	}
 	else if (op->pos_smol == 1)
 	{
 		if (op->pos_next == 0)
 		{
-			if (!(*stk_b) && !isunsorted((*stk_a)->next->next, INT_MAX))
+			if (*step == 0 && !(*stk_b) && !isunsorted((*stk_a)->next->next, INT_MAX))
 			{
 				op_swp(stk_a);
 				ft_printf("sa\n");
@@ -226,6 +235,11 @@ int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 				op_rot(stk_a);
 				ft_printf("sa\nra\n");
 			}
+		}
+		else if (!(*stk_b) && !isunsorted((*stk_a)->next, INT_MAX))
+		{
+			op_rot(stk_a);
+			ft_printf("ra\n");
 		}
 		else
 		{
@@ -292,7 +306,7 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 	vl_data	vl;
 
 	stk_a = init_stk(arr_raw, size);
-	if (!stk_a)
+	if (!stk_a || !isunsorted(stk_a, size))
 		return (0);
 	stk_b = NULL;
 	vl.size = size;
@@ -312,6 +326,7 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 		stk_a = stk_a->next; //
 	} //
 	ft_lstclear(&stk_a, del);
+	ft_lstclear(&stk_b, del); //
 	return (1);
 }
 	
@@ -384,7 +399,8 @@ int	*handle_input(char **argv, int size)
 			if (buffover(&argv[1][i]))
 				return (free_arrays(arr_raw, NULL));
 			arr_raw[j] = ft_atoi(&argv[1][i]); // <-- doch, '&argv'
-			while (argv[1][i] && ft_isdigit(argv[1][i]))
+			while (argv[1][i] && (ft_isdigit(argv[1][i]) || \
+					argv[1][i] == 43 || argv[1][i] == 45))
 				i++;
 			j++;
 		}
@@ -425,8 +441,9 @@ int	input_valid(char **argv)
 	while (argv[1][++i])
 	{
 		c = argv[1][i];
-		if (!((ft_isdigit(c) || ft_iswhite(c)) || c == 43 || \
-				c == 45) && (ft_isdigit(argv[1][i + 1])))
+		if (!(ft_isdigit(c) || ft_iswhite(c) || c == 43 || c == 45))
+			return (0);
+		if ((c == 43 || c == 45) && !(ft_isdigit(argv[1][i + 1])))
 			return (0);
 	}
 	return (1);
@@ -448,7 +465,10 @@ int	main(int argc, char **argv)
 	size = get_size(argv);
 	arr_raw = handle_input(argv, size);
 	if (!arr_raw)
+	{
+		ft_printf("Error\n");
 		return (2);
+	}
 	arr_ind = index_arr(arr_raw, size);
 	if (!arr_ind)
 		return (2);
@@ -457,6 +477,7 @@ int	main(int argc, char **argv)
 		arr_raw = free_arrays(arr_raw, arr_ind);
 		return (3);
 	}
+	free_arrays(arr_raw, arr_ind);
 	return (0);
 }
 

@@ -47,7 +47,7 @@ int	op_swp(t_list **stk)
 	t_list	*headcpy;
 	t_list	*newhead;
 
-	if (!(*stk) || !((*stk)->next) || !((*stk)->next->next))
+	if (!(*stk) || !((*stk)->next))
 		return (0);
 	headcpy = *stk;
 	newhead = (*stk)->next;
