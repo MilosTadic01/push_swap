@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/29 17:01:35 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/30 15:56:15 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -425,23 +425,23 @@ int	handle_input_int(int argc, char **argv, int *arr_raw)
 int	handle_input_str(int h, char **argv, int *arr_raw)
 {
 	int	i;
-	int	j;
-	char	c;
+	static int	j = 0;
 
 	i = 0;
-	j = h - 1;
-	c = argv[h][i];
-	while (c)
+	while (argv[h][i])
 	{
-		if (ft_iswhite(c))
-			c = argv[h][++i];
+		if (ft_iswhite(argv[h][i]))
+			++i;
 		else
 		{
 			if (buffover_str(&argv[h][i]))
 				return (0);
 			arr_raw[j] = ft_atoi(&argv[h][i]); // <-- doch, '&argv'
-			while (c != 0 && (ft_isdigit(c) || ft_isplusminus(c)))
-				c = argv[h][++i];
+			if (ft_isintmacro(&argv[h][i]))
+				i = i + 7;
+			while (argv[h][i] != 0 && (ft_isdigit(argv[h][i]) || \
+					ft_isplusminus(argv[h][i])))
+				++i;
 			++j;
 		}
 	}
@@ -484,7 +484,12 @@ int	get_size(int argc, char **argv)
 		{
 			c = argv[j][i];
 			if (ft_iswhite(c))
-				i++;
+				c = argv[j][++i];
+			if (ft_isintmacro(&argv[j][i]))
+			{
+				i = i + 7;
+				size++;
+			}
 			else
 			{
 				while (c != 0 && (ft_isdigit(c) || c == 43 || c == 45))
@@ -498,21 +503,27 @@ int	get_size(int argc, char **argv)
 
 int	input_str_valid(int argc, char **argv)
 {
-	int		k;
+	int		h;
 	int		i;
-	char	c;
 
-	k = 0;
-	while (++k < argc)
+	h = 0;
+	while (++h < argc)
 	{
-		i = -1;
-		while (argv[k][++i])
+		i = 0;
+		while (argv[h][i])
 		{
-			c = argv[k][i];
-			if (!(ft_isdigit(c) || ft_iswhite(c) || c == 43 || c == 45))
+			while (argv[h][i] != 0 && ft_iswhite(argv[h][i]))
+				++i;
+			if (ft_isintmacro(&argv[h][i]))
+				i = i + 7;
+			if (argv[h][i] != 0 && !(ft_isdigit(argv[h][i]) || \
+			ft_iswhite(argv[h][i]) || ft_isplusminus(argv[h][i])))
 				return (0);
-			if ((c == 43 || c == 45) && !(ft_isdigit(argv[k][i + 1])))
+			if (argv[h][i] != 0 && ft_isplusminus(argv[h][i]) && \
+				!(ft_isdigit(argv[h][i + 1])))
 				return (0);
+			if (argv[h][i] != 0)
+				i++;
 		}
 	}
 	return (1);

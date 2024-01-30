@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:44:49 by mitadic           #+#    #+#             */
-/*   Updated: 2023/11/20 15:44:52 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/30 13:59:24 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ int	ft_atoi(const char *nptr)
 
 	l = 0;
 	minus = 1;
+	if (ft_isintmacro(nptr) == -1)
+		return (INT_MIN);
+	else if (ft_isintmacro(nptr) == 1)
+		return (INT_MAX);
 	while ((*nptr >= 9 && *nptr <= 13) || (*nptr == 32))
 		nptr++;
 	if (*nptr == 45 || *nptr == 43)
