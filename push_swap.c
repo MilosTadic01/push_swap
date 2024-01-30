@@ -34,7 +34,14 @@ int	isunsorted(t_list *sta, int end)
 	return (0);	// if NULL passed or *stk->next == NULL, (0) is the desired outcome
 }
 
-int	buffover(const char *nptr)
+int	buffover_int(int64_t nb)
+{
+	if (nb > INT_MAX || nb < INT_MIN)
+		return (1);
+	return (0);
+}
+
+int	buffover_str(const char *nptr)
 {
 	long long	l;
 	int		minus;
@@ -396,39 +403,63 @@ int	dupes_present(int *arr, int size)
 	return (0);
 }
 
-int	handle_input_brain(int *i, int *j, char **argv, int *arr_raw)
+/*
+int	handle_input_int(int argc, char **argv, int *arr_raw)
 {
+	int	i;
+	int	j;
+
+	i = 0;
+	j = -1;
+	while (++i < argc)
+	{
+		if (buffover_int(argv[i]))
+			return (0);
+		else
+			arr_raw[j] = argv[i];
+	}
+	return (1)
+}
+*/
+
+int	handle_input_str(int h, char **argv, int *arr_raw)
+{
+	int	i;
+	int	j;
 	char	c;
 
-	c = argv[1][*i];
-	if (ft_iswhite(c))
-		++(*i);
-	else
+	i = 0;
+	j = h - 1;
+	c = argv[h][i];
+	while (c)
 	{
-		if (buffover(&argv[1][*i]))
-			return (0);
-		arr_raw[*j] = ft_atoi(&argv[1][*i]); // <-- doch, '&argv'
-		while (c != 0 && (ft_isdigit(c) || ft_isplusminus(c)))
-			c = argv[1][++(*i)];
-		++(*j);
+		if (ft_iswhite(c))
+			c = argv[h][++i];
+		else
+		{
+			if (buffover_str(&argv[h][i]))
+				return (0);
+			arr_raw[j] = ft_atoi(&argv[h][i]); // <-- doch, '&argv'
+			while (c != 0 && (ft_isdigit(c) || ft_isplusminus(c)))
+				c = argv[h][++i];
+			++j;
+		}
 	}
 	return (1);
 }
 
-int	*handle_input(char **argv, int size)
+int	*handle_input(int argc, char **argv, int size)
 {
-	int	i;
-	int	j;
+	int	h;
 	int	*arr_raw;
 
-	i = 0;
-	j = 0;
+	h = 0;
 	arr_raw = (int *)malloc(size * sizeof(int));
 	if (!arr_raw)
 		return (NULL);
-	while (argv[1][i])
+	while (++h < argc)
 	{
-		if (handle_input_brain(&i, &j, argv, arr_raw) == 0)
+		if (handle_input_str(h, argv, arr_raw) == 0)
 			return(free_arrays(arr_raw, NULL));
 	}
 	if (dupes_present(arr_raw, size))
@@ -437,44 +468,60 @@ int	*handle_input(char **argv, int size)
 }
 
 
-int	get_size(char **argv)
+int	get_size(int argc, char **argv)
 {
 	int	i;
+	int	j;
 	int	size;
 	char	c;
 
-	i = 0;
 	size = 0;
-	while (argv[1][i])
+	j = 0;
+	while (++j < argc)
 	{
-		c = argv[1][i];
-		if (ft_iswhite(c))
-			i++;
-		else
+		i = 0;
+		while (argv[j][i])
 		{
-			while (c != 0 && (ft_isdigit(c) || c == 43 || c == 45))
-				c = argv[1][++i];
-			size++;
+			c = argv[j][i];
+			if (ft_iswhite(c))
+				i++;
+			else
+			{
+				while (c != 0 && (ft_isdigit(c) || c == 43 || c == 45))
+					c = argv[j][++i];
+				size++;
+			}
 		}
 	}
 	return (size);
 }
 
-int	input_str_valid(char **argv)
+int	input_str_valid(int argc, char **argv)
 {
+	int		k;
 	int		i;
 	char	c;
 
-	i = -1;
-	while (argv[1][++i])
+	k = 0;
+	while (++k < argc)
 	{
-		c = argv[1][i];
-		if (!(ft_isdigit(c) || ft_iswhite(c) || c == 43 || c == 45))
-			return (0);
-		if ((c == 43 || c == 45) && !(ft_isdigit(argv[1][i + 1])))
-			return (0);
+		i = -1;
+		while (argv[k][++i])
+		{
+			c = argv[k][i];
+			if (!(ft_isdigit(c) || ft_iswhite(c) || c == 43 || c == 45))
+				return (0);
+			if ((c == 43 || c == 45) && !(ft_isdigit(argv[k][i + 1])))
+				return (0);
+		}
 	}
 	return (1);
+}
+
+int	error_message(int errno)
+{
+	ft_printf("Error\n");
+	return (errno);
 }
 
 int	main(int argc, char **argv)
@@ -485,18 +532,12 @@ int	main(int argc, char **argv)
 
 	if (argc == 1) // specified in the pdf as "do nothing if no parameters"
 		return (1);
-	if (argc != 2 || !input_str_valid(argv))
-	{
-		ft_printf("Error\n");
-		return (1);
-	}
-	size = get_size(argv);
-	arr_raw = handle_input(argv, size);
+	if (!input_str_valid(argc, argv))
+		return (error_message(1));
+	size = get_size(argc, argv);
+	arr_raw = handle_input(argc, argv, size);
 	if (!arr_raw)
-	{
-		ft_printf("Error\n");
-		return (2);
-	}
+		return (error_message(2));
 	arr_ind = index_arr(arr_raw, size);
 	if (!arr_ind)
 		return (2);
