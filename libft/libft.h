@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 18:05:41 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/30 14:03:32 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/30 17:10:05 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ int		ft_lstsize(t_list *lst);
 int	ft_lstintpos(t_list *lst, int n);
 t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
-void	ft_lstdelone(t_list **lst, void (*del)(void *));
+void	ft_lstdelone(t_list **lst);
 void	ft_lstbypass(t_list **last, t_list *next);
-void	ft_lstclear(t_list **lst, void (*del)(void *));
+void	ft_lstclear(t_list **lst);
 void	ft_lstiter(t_list *lst, void (*f)(void *));
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *));
 
 #endif

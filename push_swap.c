@@ -6,19 +6,12 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/30 15:56:15 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/30 18:00:02 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 #include <stdio.h>
-
-void	del(void *content)
-{
-	if (content)
-		free(content);
-	return ;
-}
 
 int	isunsorted(t_list *sta, int end)
 {
@@ -97,7 +90,7 @@ t_list	*init_stk(int *arr, int size)
 		new = ft_lstnew(&(arr[i]));
 		if (!new)
 		{
-			ft_lstclear(&head, del);
+			ft_lstclear(&head);
 			return (NULL);
 		}
 		ft_lstadd_back(&head, new);
@@ -332,8 +325,8 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 		ft_printf("Content: %i\n", *(int *)stk_a->content); //
 		stk_a = stk_a->next; //
 	} //
-	ft_lstclear(&stk_a, del);
-	ft_lstclear(&stk_b, del); //
+	ft_lstclear(&stk_a);
+	ft_lstclear(&stk_b); //
 	return (1);
 }
 	

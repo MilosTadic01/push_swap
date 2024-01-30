@@ -6,17 +6,17 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:49:02 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/22 12:50:39 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/30 17:06:20 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list **lst, void (*del)(void *))
+void	ft_lstdelone(t_list **lst)
 {
-	if (!lst || !(*lst) || !(*del))
+	if (!lst || !(*lst))
 		return;
-	del(*lst);
+	free (*lst);
 	*lst = NULL;
 	return ;
 }
