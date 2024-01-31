@@ -3,7 +3,11 @@ CFLAGS	= -Wall -Wextra -Werror -g
 NAME	= push_swap
 LIBFTD	= ./libft
 SRC 	= push_swap.c \
-	  operands.c
+	  inputchecks.c \
+	  sorting.c \
+	  conds.c \
+	  operands.c \
+	  liberators.c
 HEADER	= push_swap.h
 
 all: $(NAME)

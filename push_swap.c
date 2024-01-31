@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/30 18:00:02 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/31 14:49:40 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	isunsorted(t_list *sta, int end)
 			return (1);
 		sta = sta->next;
 	}
-	return (0);	// if NULL passed or *stk->next == NULL, (0) is the desired outcome
+	return (0);
 }
 
 int	buffover_int(int64_t nb)
@@ -137,7 +137,7 @@ int	conds_if_b(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 		op_rot(stk_a);
 		ft_printf("rrb\npa\nra\n");
 	}
-	else if (op->pos_smol == (op->pos_last - 1)) // note: may happen always
+	else if (op->pos_smol == (op->pos_last - 1))
 	{
 		op_revrot(stk_b);
 		op_revrot(stk_b);
@@ -160,7 +160,7 @@ void	conds_b_weigh(op_data *op, t_list **stk_a, t_list **stk_b)
 	i = -1;
 	if (op->pos_smol > op->pos_last / 2)
 	{
-		while (++i <= (op->pos_last - op->pos_smol)) // key difference: '='
+		while (++i <= (op->pos_last - op->pos_smol))
 		{
 			op_revrot(stk_b);
 			ft_printf("rrb\n");
@@ -258,13 +258,11 @@ int	conds_if_a(op_data *op, int *step, t_list **stk_a, t_list **stk_b)
 	}
 	else if (op->pos_smol == op->pos_last)
 		;
-	else if (*step == 0 && op->pos_smol == (op->pos_last - 1)) // note: may only happen if 0th step
+	else if (*step == 0 && op->pos_smol == (op->pos_last - 1))
 	{
 		op_revrot(stk_a);
 		ft_printf("rra\n");
 	}
-	// else if (*step == 0 && op->pos_smol > op->pos_last / 2) <-- implied smol is in a.
-	//	loop until op_revrot(stk_a);
 	else
 	{
 		++(*step);
@@ -284,7 +282,6 @@ void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
 	op.pos_next = ft_lstintpos(*stk_a, arr_ind[vl->next]);
 	if (op.pos_next == -1)
 		op.pos_next = ft_lstintpos(*stk_b, arr_ind[vl->next]);
-	// op.pos_last = vl->size - 1; <--obsoleted inside conditions below
 	if (ft_lstintpos(*stk_a, arr_ind[vl->smol]) != -1)
 	{
 		op.pos_last = ft_lstsize(*stk_a) - 1;
@@ -320,22 +317,15 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 	vl.smol = -1;
 	while (++vl.smol < size)
 	{
-		vl.next = vl.smol; // <-- just more space-efficient for me to write 'else' this way
+		vl.next = vl.smol;
 		if (vl.smol < (size - 1))
 			vl.next = (vl.smol + 1);
 		find_n_swap(arr_ind, &vl, &stk_a, &stk_b);
 		if (!stk_b && !isunsorted(stk_a, INT_MAX))
 			break;
 	}
-	while (stk_a) //
-	{
-		ft_printf("Content: %i\n", *(int *)stk_a->content); //
-		stk_a = stk_a->next; //
-	} //
 	return (clearstk(&stk_a, &stk_b, 1));
 }
-	
-
 
 void	ft_bubble_sort(int *arr, int size)
 {
@@ -363,11 +353,9 @@ void	ft_bubble_sort(int *arr, int size)
 	}
 }
 
-
 int	*index_arr(int *arr_raw, int size)
 {
 	int	i;
-	// int	buff;
 	int	*arr_ind;
 
 	i = -1;
@@ -401,29 +389,9 @@ int	dupes_present(int *arr, int size)
 	return (0);
 }
 
-/*
-int	handle_input_int(int argc, char **argv, int *arr_raw)
+int	handle_input_str(int h, int *indx, char **argv, int *arr_raw)
 {
 	int	i;
-	int	j;
-
-	i = 0;
-	j = -1;
-	while (++i < argc)
-	{
-		if (buffover_int(argv[i]))
-			return (0);
-		else
-			arr_raw[j] = argv[i];
-	}
-	return (1)
-}
-*/
-
-int	handle_input_str(int h, char **argv, int *arr_raw)
-{
-	int	i;
-	static int	j = 0;
 
 	i = 0;
 	while (argv[h][i])
@@ -434,13 +402,13 @@ int	handle_input_str(int h, char **argv, int *arr_raw)
 		{
 			if (buffover_str(&argv[h][i]))
 				return (0);
-			arr_raw[j] = ft_atoi(&argv[h][i]); // <-- doch, '&argv'
+			arr_raw[*indx] = ft_atoi(&argv[h][i]);
 			if (ft_isintmacro(&argv[h][i]))
 				i = i + 7;
 			while (argv[h][i] != 0 && (ft_isdigit(argv[h][i]) || \
 					ft_isplusminus(argv[h][i])))
 				++i;
-			++j;
+			++(*indx);
 		}
 	}
 	return (1);
@@ -450,21 +418,22 @@ int	*handle_input(int argc, char **argv, int size)
 {
 	int	h;
 	int	*arr_raw;
+	int	indx;
 
 	h = 0;
+	indx = 0;
 	arr_raw = (int *)malloc(size * sizeof(int));
 	if (!arr_raw)
 		return (NULL);
 	while (++h < argc)
 	{
-		if (handle_input_str(h, argv, arr_raw) == 0)
+		if (handle_input_str(h, &indx, argv, arr_raw) == 0)
 			return(free_arrays(arr_raw, NULL));
 	}
 	if (dupes_present(arr_raw, size))
 		return (free_arrays(arr_raw, NULL));
 	return (arr_raw);
 }
-
 
 int	get_size(int argc, char **argv)
 {
@@ -531,8 +500,7 @@ int	input_str_valid(int argc, char **argv)
 
 int	error_message(int errno)
 {
-	// ft_printf("Error\n");
-	write(2, "Error\n", 6);
+	write(2, "Error\n", 7);
 	return (errno);
 }
 
@@ -542,7 +510,7 @@ int	main(int argc, char **argv)
 	int	*arr_raw;
 	int	*arr_ind;
 
-	if (argc == 1) // specified in the pdf as "do nothing if no parameters"
+	if (argc == 1)
 		return (1);
 	if (!input_str_valid(argc, argv))
 		return (error_message(1));
@@ -561,13 +529,3 @@ int	main(int argc, char **argv)
 	free_arrays(arr_raw, arr_ind);
 	return (0);
 }
-
-
-// So Homework: give members of int * to linked-list contents, then see what
-// happens when you change the values.
-
-
-// ultimately how to check the next smallest
-// i++;
-// smallest = arr_ind[i];
-// that's it bby; that's why we make that presorted arr_ind

@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/22 15:48:10 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/31 14:49:38 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 void	push_swap(int argc, char **argv);
 
-// size (no. of members); (current) smallest value; next - 2nd smallest value;
 typedef struct	values
 {
 	int	size;
