@@ -299,6 +299,13 @@ void	find_n_swap(int *arr_ind, vl_data *vl, t_list **stk_a, t_list **stk_b)
 	}
 }
 
+int	clearstk(t_list **stk_a, t_list **stk_b, int retval)
+{
+	ft_lstclear(stk_a);
+	ft_lstclear(stk_b);
+	return (retval);
+}
+
 int	go_sorting(int *arr_raw, int *arr_ind, int size)
 {
 	t_list	*stk_a;
@@ -306,9 +313,9 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 	vl_data	vl;
 
 	stk_a = init_stk(arr_raw, size);
-	if (!stk_a || !isunsorted(stk_a, size))
-		return (0);
 	stk_b = NULL;
+	if (!stk_a || !isunsorted(stk_a, size))
+		return (clearstk(&stk_a, &stk_b, 0));
 	vl.size = size;
 	vl.smol = -1;
 	while (++vl.smol < size)
@@ -325,9 +332,7 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 		ft_printf("Content: %i\n", *(int *)stk_a->content); //
 		stk_a = stk_a->next; //
 	} //
-	ft_lstclear(&stk_a);
-	ft_lstclear(&stk_b); //
-	return (1);
+	return (clearstk(&stk_a, &stk_b, 1));
 }
 	
 
@@ -476,8 +481,10 @@ int	get_size(int argc, char **argv)
 		while (argv[j][i])
 		{
 			c = argv[j][i];
-			if (ft_iswhite(c))
+			while (c != 0 && ft_iswhite(c))
 				c = argv[j][++i];
+			if (c == 0)
+				break;
 			if (ft_isintmacro(&argv[j][i]))
 			{
 				i = i + 7;
@@ -524,7 +531,8 @@ int	input_str_valid(int argc, char **argv)
 
 int	error_message(int errno)
 {
-	ft_printf("Error\n");
+	// ft_printf("Error\n");
+	write(2, "Error\n", 6);
 	return (errno);
 }
 
