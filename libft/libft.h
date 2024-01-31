@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 18:05:41 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/30 17:10:05 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/01/31 16:31:14 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_list
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *new);
 int		ft_lstsize(t_list *lst);
-int	ft_lstintpos(t_list *lst, int n);
+int		ft_lstintpos(t_list *lst, int n);
 t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstdelone(t_list **lst);

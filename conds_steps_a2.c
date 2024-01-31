@@ -1,19 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstbypass.c                                     :+:      :+:    :+:   */
+/*   conds_steps_a2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 16:30:43 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:30:45 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/31 17:34:27 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/31 17:37:40 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-void	ft_lstbypass(t_list **last, t_list *next)
+void	conds_steps_a_f(t_list **stk_a)
 {
-	(*last)->next = next;
-	return ;
+	op_revrot(stk_a);
+	op_revrot(stk_a);
+	op_swp(stk_a);
+	ft_printf("rra\nrra\nsa\n");
+}
+
+void	conds_steps_a_g(t_list **stk_a)
+{
+	op_revrot(stk_a);
+	ft_printf("rra\n");
+}
+
+void	conds_steps_a_h(t_list **stk_a, t_list **stk_b)
+{
+	op_psh(stk_a, stk_b);
+	ft_printf("pb\n");
 }

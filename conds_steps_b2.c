@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstbypass.c                                     :+:      :+:    :+:   */
+/*   conds_steps_b2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 16:30:43 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:30:45 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/31 17:49:53 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/31 17:57:11 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-void	ft_lstbypass(t_list **last, t_list *next)
+void	conds_steps_b_f(t_list **stk_b)
 {
-	(*last)->next = next;
-	return ;
+	op_revrot(stk_b);
+	ft_printf("rrb\n");
+}
+
+void	conds_steps_b_g(t_list **stk_b)
+{
+	op_rot(stk_b);
+	ft_printf("rb\n");
 }

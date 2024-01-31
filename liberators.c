@@ -1,19 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstbypass.c                                     :+:      :+:    :+:   */
+/*   liberators.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 16:30:43 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:30:45 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/31 16:01:35 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-void	ft_lstbypass(t_list **last, t_list *next)
+void	*free_arrays(int *arr_raw, int *arr_ind)
 {
-	(*last)->next = next;
-	return ;
+	if (arr_raw)
+	{
+		free (arr_raw);
+		arr_raw = NULL;
+	}
+	if (arr_ind)
+	{
+		free (arr_ind);
+		arr_ind = NULL;
+	}
+	return (NULL);
+}
+
+int	clearstk(t_list **stk_a, t_list **stk_b, int retval)
+{
+	ft_lstclear(stk_a);
+	ft_lstclear(stk_b);
+	return (retval);
+}
+
+int	error_message(int errno)
+{
+	write(2, "Error\n", 7);
+	return (errno);
 }
