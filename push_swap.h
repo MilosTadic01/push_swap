@@ -20,6 +20,7 @@ typedef struct values
 	int	size;
 	int	smol;
 	int	next;
+	int	step;
 }	t_vl;
 
 typedef struct op_numbers
@@ -51,10 +52,10 @@ int		error_message(int errno);
 int		clearstk(t_list **stk_a, t_list **stk_b, int retval);
 void	*free_arrays(int *arr_raw, int *arr_ind);
 
-int		conds_if_a(t_op *op, int *step, t_list **stk_a, t_list **stk_b);
-void	c_a_exp(t_op *op, int *step, t_list **stk_a, t_list **stk_b);
-int		conds_if_b(t_op *op, int *step, t_list **stk_a, t_list **stk_b);
-void	conds_a_weigh(t_op *op, int *step, t_list **stk_a, t_list **stkb);
+int		conds_if_a(t_op *op, t_vl *vl, t_list **stk_a, t_list **stk_b);
+void	c_a_exp(t_op *op, t_vl *vl, t_list **stk_a, t_list **stk_b);
+int		conds_if_b(t_op *op, t_vl *vl, t_list **stk_a, t_list **stk_b);
+void	conds_a_weigh(t_op *op, t_vl *vl, t_list **stk_a, t_list **stkb);
 void	conds_b_weigh(t_op *op, t_list **stk_a, t_list **stk_b);
 
 void	conds_steps_a_a(t_list **stk_a);

@@ -28,7 +28,6 @@ int	isunsorted(t_list *stk, int end)
 
 void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b)
 {
-	static int	step = 0;
 	t_op		op;
 
 	op.pos_smol = ft_lstintpos(*stk_a, arr_ind[vl->smol]);
@@ -40,13 +39,13 @@ void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b)
 	if (ft_lstintpos(*stk_a, arr_ind[vl->smol]) != -1)
 	{
 		op.pos_last = ft_lstsize(*stk_a) - 1;
-		if (!conds_if_a(&op, &step, stk_a, stk_b))
-			conds_a_weigh(&op, &step, stk_a, stk_b);
+		if (!conds_if_a(&op, vl, stk_a, stk_b))
+			conds_a_weigh(&op, vl, stk_a, stk_b);
 	}
 	else
 	{
 		op.pos_last = ft_lstsize(*stk_b) - 1;
-		if (!conds_if_b(&op, &step, stk_a, stk_b))
+		if (!conds_if_b(&op, vl, stk_a, stk_b))
 			conds_b_weigh(&op, stk_a, stk_b);
 	}
 }
@@ -63,6 +62,7 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 		return (clearstk(&stk_a, &stk_b, 0));
 	vl.size = size;
 	vl.smol = -1;
+	vl.step = 0;
 	while (++vl.smol < size)
 	{
 		vl.next = vl.smol;
