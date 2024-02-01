@@ -1,7 +1,8 @@
 CC	= cc
 CFLAGS	= -Wall -Wextra -Werror -g
 NAME	= push_swap
-LIBFTD	= ./libft
+SRCD	= ./source/
+LIBFTD	= ./libft/
 SRC 	= push_swap.c \
 	  inputctrl_pt1.c \
 	  inputctrl_pt2.c \
@@ -17,13 +18,12 @@ HEADER	= push_swap.h
 
 all: $(NAME)
 
-$(NAME): $(SRC) $(HEADER)
+$(NAME): $(addprefix $(SRCD),$(SRC)) $(SRCD)$(HEADER)
 	make -C $(LIBFTD) all
-	cp $(LIBFTD)/libft.a $(NAME)
-	$(CC) $(CFLAGS) $(SRC) -L$(LIBFTD) -lft -o $(NAME)
+	$(CC) $(CFLAGS) $(addprefix $(SRCD),$(SRC)) -I$(SRCD) -L$(LIBFTD) -lft -o $(NAME)
 
 clean:
-	rm -f *.o
+	rm -f $(SRCD)*.o
 	make -C $(LIBFTD) clean
 
 fclean:	clean

@@ -6,13 +6,13 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 18:27:00 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/01 12:30:05 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
-# include "./libft/libft.h"
+# include "../libft/libft.h"
 # include <limits.h>
 
 typedef struct values
