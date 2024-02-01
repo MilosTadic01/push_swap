@@ -1,0 +1,6 @@
+first line
+
+third line (the 2nd had no text)
+		fourth line (indented!)
+the fifth and the longest line by far, 30+ characters
+Sixth and last

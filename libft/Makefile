@@ -2,6 +2,7 @@ CC = cc
 CFLAGS := -Wall -Wextra -Werror
 NAME := libft.a
 LIBFTPRINTFD := ./ft_printf
+GNLD := ./get_next_line
 HEADER = libft.h
 SRC :=	ft_isalpha.c \
 	ft_isdigit.c \
@@ -58,8 +59,10 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFTPRINTFD) all
-	cp $(LIBFTPRINTFD)/libftprintf.a $(NAME)
-	ar rcs $(NAME) $^
+	make -C $(GNLD) all
+	find $(LIBFTPRINTFD) -name "*.o" -exec cp {} . \;
+	find $(GNLD) -name "*.o" -exec cp {} . \;
+	ar rcs $(NAME) *.o
 
 $(OBJ): %.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -67,10 +70,12 @@ $(OBJ): %.o: %.c $(HEADER)
 clean:
 	rm -f *.o
 	make -C $(LIBFTPRINTFD) clean
+	make -C $(GNLD) clean
 
 fclean: clean
 	rm -f $(NAME)
 	make -C $(LIBFTPRINTFD) fclean
+	make -C $(GNLD) fclean
 
 re: fclean all
 

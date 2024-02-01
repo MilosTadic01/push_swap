@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   gnltest.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 16:45:34 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 15:25:16 by mitadic          ###   ########.fr       */
+/*   Created: 2024/02/01 14:50:01 by mitadic           #+#    #+#             */
+/*   Updated: 2024/02/01 15:37:19 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "./source/push_swap.h"
 
-size_t	ft_strlen(const char *s)
+int	main(void)
 {
-	size_t	i;
-
-	i = 0;
-	if (!s)
-		return (i);
-	while (*s)
+	int i = 0;
+	while (i++ < 5)
 	{
-		s++;
-		i++;
+		ft_printf("%s", get_next_line(0));
 	}
-	return (i);
+	return (1);
 }

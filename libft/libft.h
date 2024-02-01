@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 18:05:41 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:31:14 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/01 14:58:35 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdint.h>
 # include <limits.h>
 # include "./ft_printf/ft_printf.h"
+# include "./get_next_line/get_next_line.h"
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
@@ -74,5 +75,7 @@ void	ft_lstbypass(t_list **last, t_list *next);
 void	ft_lstclear(t_list **lst);
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *));
+
+char	*get_next_line(int fd);
 
 #endif

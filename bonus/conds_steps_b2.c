@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   conds_steps_b2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 16:45:34 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 15:25:16 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/31 17:49:53 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/31 17:57:11 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-size_t	ft_strlen(const char *s)
+void	conds_steps_b_f(t_list **stk_b)
 {
-	size_t	i;
+	op_revrot(stk_b);
+	ft_printf("rrb\n");
+}
 
-	i = 0;
-	if (!s)
-		return (i);
-	while (*s)
-	{
-		s++;
-		i++;
-	}
-	return (i);
+void	conds_steps_b_g(t_list **stk_b)
+{
+	op_rot(stk_b);
+	ft_printf("rb\n");
 }

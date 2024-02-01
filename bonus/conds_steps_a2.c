@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   conds_steps_a2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 16:45:34 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 15:25:16 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/31 17:34:27 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/31 17:37:40 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-size_t	ft_strlen(const char *s)
+void	conds_steps_a_f(t_list **stk_a)
 {
-	size_t	i;
+	op_revrot(stk_a);
+	op_revrot(stk_a);
+	op_swp(stk_a);
+	ft_printf("rra\nrra\nsa\n");
+}
 
-	i = 0;
-	if (!s)
-		return (i);
-	while (*s)
-	{
-		s++;
-		i++;
-	}
-	return (i);
+void	conds_steps_a_g(t_list **stk_a)
+{
+	op_revrot(stk_a);
+	ft_printf("rra\n");
+}
+
+void	conds_steps_a_h(t_list **stk_a, t_list **stk_b)
+{
+	op_psh(stk_a, stk_b);
+	ft_printf("pb\n");
 }

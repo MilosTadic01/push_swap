@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   liberators.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 16:45:34 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 15:25:16 by mitadic          ###   ########.fr       */
+/*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
+/*   Updated: 2024/01/31 16:01:35 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-size_t	ft_strlen(const char *s)
+void	*free_arrays(int *arr_raw, int *arr_ind)
 {
-	size_t	i;
-
-	i = 0;
-	if (!s)
-		return (i);
-	while (*s)
+	if (arr_raw)
 	{
-		s++;
-		i++;
+		free (arr_raw);
+		arr_raw = NULL;
 	}
-	return (i);
+	if (arr_ind)
+	{
+		free (arr_ind);
+		arr_ind = NULL;
+	}
+	return (NULL);
+}
+
+int	clearstk(t_list **stk_a, t_list **stk_b, int retval)
+{
+	ft_lstclear(stk_a);
+	ft_lstclear(stk_b);
+	return (retval);
+}
+
+int	error_message(int errno)
+{
+	write(2, "Error\n", 7);
+	return (errno);
 }
