@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 14:11:43 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 12:11:09 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,34 @@ t_list	*init_stk(int *arr, int size)
 	return (head);
 }
 
+int	is_validinstr(char *instr)
+{
+	if (ft_strncmp(instr, "sa\n", 4) == 0) // yes, incl 0, it will handle it
+		return (1);
+	else if (ft_strncmp(instr, "sb\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "ss\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "ra\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "rb\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "rr\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "pa\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "pb\n", 4) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "rra\n", 5) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "rrb\n", 5) == 0)
+		return (1);
+	else if (ft_strncmp(instr, "rrr\n", 5) == 0)
+		return (1);
+	else
+		return (0);
+}
+
 char	*getinstr(int size)
 {
 	int	i;
@@ -52,14 +80,13 @@ char	*getinstr(int size)
 		instr = get_next_line(0);
 		if (!instr) // if EOF : ctrl+d
 			return (instrset);
-		if (ft_strlen(instr) > 4 || \			// if non-valid single instr
+		if (!is_validinstr(instr) || \		// if non-valid single instr
 				ft_strlcat(instrlst, instr, alsz) > alsz) // if too many instr
 			return (error_free_ptr(instr, instrset));
 		free (instr);
 		instr = NULL;
 	}
 }
-
 
 int	main(int argc, char **argv)
 {
