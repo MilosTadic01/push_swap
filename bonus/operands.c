@@ -6,11 +6,11 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 15:55:08 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:33:41 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:27:35 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "checker.h"
 
 int	op_psh(t_list **stk_src, t_list **stk_dst)
 {

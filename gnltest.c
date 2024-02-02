@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 14:50:01 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 15:37:19 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 15:59:32 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 
 int	main(void)
 {
+	char	*str;
+
 	while (1)
 	{
-		ft_printf("%s", get_next_line(0));
+		str = get_next_line(0);
+		ft_printf("%s", str);
+		if (!str)
+			return (0);
+		free(str);
+		str = NULL;
 	}
 	return (0);
 }

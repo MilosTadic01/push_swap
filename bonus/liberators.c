@@ -6,11 +6,11 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:01:35 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:26:51 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "checker.h"
 
 void	*free_arrays(int *arr_raw, int *arr_ind)
 {

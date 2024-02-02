@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/01 12:30:05 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:41:53 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct op_numbers
 	int	pos_next;
 }	t_op;
 
+// main
 void	push_swap(int argc, char **argv);
 t_list	*init_stk(int *arr, int size);
 

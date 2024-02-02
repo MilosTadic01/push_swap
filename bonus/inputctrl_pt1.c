@@ -6,11 +6,11 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:43:26 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 12:46:27 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "checker.h"
 
 int	handle_input_str(int h, int *indx, char **argv, int *arr_raw)
 {

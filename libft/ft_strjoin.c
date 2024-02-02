@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 17:47:19 by mitadic           #+#    #+#             */
-/*   Updated: 2023/11/20 18:17:41 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 12:18:50 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 
-	dest = malloc((ftm_strlen(s1) + ftm_strlen(s2) + 1));
+	dest = malloc((ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (dest == NULL)
 		return (NULL);
 	i = -1;
