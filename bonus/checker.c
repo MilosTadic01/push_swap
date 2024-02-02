@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/02 14:41:58 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/02 18:14:32 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_list	*init_stk(int *arr, int size)
 
 int	is_validinstr(char *instr)
 {
-	if (ft_strncmp(instr, "sa\n", 4) == 0) // yes, incl 0, it will handle it
+	if (ft_strncmp(instr, "sa\n", 4) == 0)
 		return (1);
 	else if (ft_strncmp(instr, "sb\n", 4) == 0)
 		return (1);
@@ -64,7 +64,7 @@ int	is_validinstr(char *instr)
 
 char	*getinstr(int size)
 {
-	int	i;
+	int		i;
 	char	*instr;
 	char	*instrset;
 	size_t	alsz;
@@ -78,10 +78,10 @@ char	*getinstr(int size)
 	while (1)
 	{
 		instr = get_next_line(0);
-		if (!instr) // if EOF : ctrl+d
+		if (!instr)
 			return (instrset);
 		if (!is_validinstr(instr) || \
-				ft_strlcat(instrset, instr, alsz) > alsz) // if too many instr
+				ft_strlcat(instrset, instr, alsz) > alsz)
 			return (error_free_ptr(instr, instrset));
 		free (instr);
 		instr = NULL;
@@ -90,8 +90,8 @@ char	*getinstr(int size)
 
 int	main(int argc, char **argv)
 {
-	int	size;
-	int	*arr_raw;
+	int		size;
+	int		*arr_raw;
 	char	*instrset;
 
 	if (argc == 1)
@@ -102,16 +102,14 @@ int	main(int argc, char **argv)
 	arr_raw = handle_input(argc, argv, size);
 	if (!arr_raw)
 		return (error_message(2));
-	
 	instrset = getinstr(size);
 	if (!instrset)
 		return (error_message(2));
-	
-	if (!go_sorting(arr_raw, instrset, size)) // take your instrset and godspeed, strncmp
+	if (!go_sorting(arr_raw, instrset, size)) 
 		ft_printf("KO\n");
 	else
 		ft_printf("OK\n");
 	free_arrays(arr_raw, NULL);
-	free(instrset);				// gotta do this in the end
+	free(instrset);
 	return (0);
 }
