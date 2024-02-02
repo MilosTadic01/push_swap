@@ -93,3 +93,18 @@ We use `pa` to first send **largest** and then keep sending smaller and smaller 
 - pb
   - a: 5
   - b: 3412
+
+## Project architecture
+
+```
+                      ---arr_raw
+                      |                 ---init_stk(a)
+main(argc, argv) -----|--arr_ind        |              
+                      |                 |
+                      ---go_sorting-----|
+                                        |              ---conds_if_val_in_a --> do op, print, return
+                                        |              |
+                                        ---find_n_swap-|
+                                                       |
+                                                       ---conds_if_val_in_b --> do op, print, return
+```  
