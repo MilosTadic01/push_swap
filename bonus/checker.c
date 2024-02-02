@@ -39,9 +39,11 @@ char	*getinstr(int size)
 	int	i;
 	char	*instr;
 	char	*instrset;
+	int	alsz;
 
 	instr = NULL;
-	instrset = (char *)calloc(size * 50 * sizeof(char));
+	alsz = size * 50;
+	instrset = (char *)ft_calloc(alsz * sizeof(char));
 	if (!instrset)
 		return (error_free_ptr(instr, instrset));
 	i = 0;
@@ -50,7 +52,8 @@ char	*getinstr(int size)
 		instr = get_next_line(0);
 		if (!instr) // if EOF : ctrl+d
 			return (instrset);
-		if (ft_strlcat(instrlst, instr, size * 50) > size * 50) // if too many instr
+		if (ft_strlen(instr) > 4 || \			// if non-valid single instr
+				ft_strlcat(instrlst, instr, alsz) > alsz) // if too many instr
 			return (error_free_ptr(instr, instrset));
 		free (instr);
 		instr = NULL;
