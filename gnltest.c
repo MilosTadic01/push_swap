@@ -14,10 +14,9 @@
 
 int	main(void)
 {
-	int i = 0;
-	while (i++ < 5)
+	while (1)
 	{
 		ft_printf("%s", get_next_line(0));
 	}
-	return (1);
+	return (0);
 }

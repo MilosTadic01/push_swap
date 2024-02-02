@@ -17,7 +17,7 @@ char	*set_line(int fd, char **rest, char *buff)
 	char	*line;
 	int		br;
 
-	line = ft_strjoin("", &(**rest));
+	line = ftm_strjoin("", &(**rest));
 	free_if_extant(&(*rest), NULL);
 	if (!line)
 		return (NULL);
@@ -31,7 +31,7 @@ char	*set_line(int fd, char **rest, char *buff)
 		}
 		buff[br] = 0;
 		(*rest) = line;
-		line = ft_strjoin(&(**rest), &(*buff));
+		line = ftm_strjoin(&(**rest), &(*buff));
 		free_if_extant(&(*rest), NULL);
 		if (line == NULL)
 			return (NULL);
@@ -58,12 +58,12 @@ int	set_rest(char **rest, char **line)
 		i++;
 	if ((*line)[i] == 10)
 		i++;
-	tmp = ft_substr(&(**line), 0, i);
+	tmp = ftm_substr(&(**line), 0, i);
 	if (!tmp)
 		return (set_rest_purge(&(*rest), &(*line)));
 	if ((*line)[i - 1] == '\n' && (*line)[i] != 0)
 	{
-		(*rest) = ft_substr((*line), i, (ft_strlen(*line) - i));
+		(*rest) = ftm_substr((*line), i, (ftm_strlen(*line) - i));
 		if (!rest && !(*rest))
 			return (set_rest_purge(&(*rest), &(*line)));
 	}

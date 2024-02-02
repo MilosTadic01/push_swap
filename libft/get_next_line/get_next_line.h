@@ -19,7 +19,6 @@
 #  define MAX_FD 1024
 # endif
 
-# include "../libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -28,7 +27,10 @@ char	*set_line(int fd, char **rest, char *buff);
 int		set_rest(char **rest, char **line);
 int		set_rest_purge(char **rest, char **line);
 
+char	*ftm_substr(const char *s, size_t start, size_t len);
+char	*ftm_strjoin(char *s1, char *s2);
 int		ft_chrwhere(char *s, int c);
+int		ftm_strlen(char *s);
 void	free_if_extant(char **s1, char **s2);
 
 #endif

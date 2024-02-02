@@ -34,28 +34,59 @@ t_list	*init_stk(int *arr, int size)
 	return (head);
 }
 
+char	*getinstr(int size)
+{
+	int	i;
+	char	*instr;
+	char	*instrset;
+
+	instr = NULL;
+	instrset = (char *)calloc(size * 50 * sizeof(char));
+	if (!instrset)
+		return (error_free_ptr(instr, instrset));
+	i = 0;
+	while (1)
+	{
+		instr = get_next_line(0);
+		if (!instr) // if EOF : ctrl+d
+			return (instrset);
+		if (ft_strlcat(instrlst, instr, size * 50) > size * 50) // if too many instr
+			return (error_free_ptr(instr, instrset));
+		free (instr);
+		instr = NULL;
+	}
+}
+
+
 int	main(int argc, char **argv)
 {
 	int	size;
 	int	*arr_raw;
 	int	*arr_ind;
+	char	*instrset;
 
 	if (argc == 1)
 		return (1);
 	if (!input_str_valid(argc, argv))
 		return (error_message(1));
 	size = get_size_shell(argc, argv);
+	
+	instrset = getinstr(size);
+	if (!instrset)
+		return (error_message(2));
+
 	arr_raw = handle_input(argc, argv, size);
 	if (!arr_raw)
 		return (error_message(2));
-	arr_ind = index_arr(arr_raw, size);
+	arr_ind = index_arr(arr_raw, size); // prolly don't need arr_ind
 	if (!arr_ind)
 		return (2);
-	if (!go_sorting(arr_raw, arr_ind, size))
+	if (!go_sorting(arr_raw, arr_ind, size)) // take your instrset and godspeed, strncmp
 	{
 		arr_raw = free_arrays(arr_raw, arr_ind);
 		return (3);
 	}
 	free_arrays(arr_raw, arr_ind);
+	free(instrset);				// gotta do this in the end
 	return (0);
 }

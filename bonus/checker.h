@@ -48,6 +48,7 @@ int		*index_arr(int *arr_raw, int size);
 void	ft_bubble_sort(int *arr, int size);
 int		buffover_str(const char *nptr);
 
+char	*error_free_ptr(char *str1, char *str2);
 int		error_message(int errno);
 int		clearstk(t_list **stk_a, t_list **stk_b, int retval);
 void	*free_arrays(int *arr_raw, int *arr_ind);
