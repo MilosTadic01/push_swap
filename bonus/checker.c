@@ -64,7 +64,6 @@ int	is_validinstr(char *instr)
 
 char	*getinstr(int size)
 {
-	int		i;
 	char	*instr;
 	char	*instrset;
 	size_t	alsz;
@@ -74,7 +73,6 @@ char	*getinstr(int size)
 	instrset = (char *)ft_calloc(alsz, sizeof(char));
 	if (!instrset)
 		return (error_free_ptr(instr, instrset));
-	i = 0;
 	while (1)
 	{
 		instr = get_next_line(0);
