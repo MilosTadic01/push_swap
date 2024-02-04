@@ -100,6 +100,24 @@ We use `pa` to first send **largest** and then keep sending smaller and smaller 
 - pb
   - a: 5
   - b: 3412
+ 
+#### 3.0 The new 'sifting' algorithm
+* While (++i < size) // so for five elements, we count to five, push those below the half to stk_b and perform additional ops if appropriate
+  * init vip;
+  * else if (pa0 < arr_ind[half])
+    NOW ADJACENCIES FIRST:
+    * if (pa0 - 1 == paz)
+      * if
+      * else
+        * `rra`
+    AND GENERAL SORTEDNESS AFTER:
+    * if (pa1 < arr_ind[half]) && (pa0 > pa1)
+      * if (pb0 < pb1)
+        * `ss` + `pb`
+      * else
+        * `sa` + `pb`
+    * else
+      * `pb`
 
 ## Project architecture
 
