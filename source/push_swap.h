@@ -30,20 +30,42 @@ typedef struct op_numbers
 	int	pos_next;
 }	t_op;
 
+typedef struct positions
+{
+	int	pa0;
+	int	pa1;
+	int	pa2;
+	int	pazm2
+	int	pazm1;
+	int	paz;
+	int	pb0;
+	int	pb1;
+	int	pb2;
+	int	pbzm2;
+	int	pbzm1;
+	int	pbz;
+}	t_vip;
+
 // main
 void	push_swap(int argc, char **argv);
 t_list	*init_stk(int *arr, int size);
 
+// sorting.c
 int		go_sorting(int *arr_raw, int *arr_ind, int size);
 void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b);
 int		isunsorted(t_list *stk, int end);
 
+// sifting.c
+int	sifting_ok(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
+
+// inputctrl_pt1.c
 int		input_str_valid(int argc, char **argv);
 int		get_size_shell(int argc, char **argv);
 void	get_size_core(int i, int *j, int *size, char **argv);
 int		*handle_input(int argc, char **argv, int size);
 int		handle_input_str(int h, int *indx, char **argv, int *arr_raw);
 
+// inputctrl_pt2.c
 int		dupes_present(int *arr, int size);
 int		*index_arr(int *arr_raw, int size);
 void	ft_bubble_sort(int *arr, int size);

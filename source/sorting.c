@@ -63,6 +63,9 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 	vl.size = size;
 	vl.smol = -1;
 	vl.step = 0;
+	if (solvable_wo_b(arr_raw, arr_ind, size))
+	if (sifting_ok(arr_ind, size, &stk_a, &stk_b))
+		return (clearstk(&stk_a, &stk_b, 1));
 	while (++vl.smol < size)
 	{
 		vl.next = vl.smol;
