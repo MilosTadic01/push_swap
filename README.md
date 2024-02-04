@@ -37,17 +37,26 @@ b: _____
 ________________________________________________
 
 ## Algorithm considerations
+### Philosophy of efficiency
+There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey into the considerations of efficiency.
+The assignment says:
+```
+This project will make you sort data on a stack, with a limited set of instructions, using the **lowest possible number of actions**.
+```
+The word 'actions' does not actually refer to the operations like the condition checks or the pre-sorting initialization steps, but rather to the number of the authorized sorting actions only. Which frees the programmer to perform countless checks, but obfuscates the considerations of efficiency. Because ultimately, the evaluation sheet rates efficiency only according to the number of 'swaps' (authorized sorting steps) performed.
+```
+[For 100 unsorted numbers...]
+- Less than 700 'steps': max score
+- Below 1500 'steps': min score
+- Over 1500 'steps': fail
+
+```
 ### Parameters?
 Whether and how many parameters to use will depend on whether keeping track of them would be considered to lower the algorithm efficiency. But if we had our hands untied, we could consider:
 * The `largest number` / the `smallest number`
 * The `indexes` (values **0 2 8 11 13** being indexed as **0 1 2 3 4**)
 * The `how many values smaller than` the `current` 
 * The `how many values greater than` the `current` 
-
-### 1: Bubble sort
-Wouldn't work because we don't have access to a swapping operation that can work over an entire list. `sa` only works on list indexes [0] and [1].
-### 2: Insertion sort
-It's looking right, but again the operations available to us are less than ideal. For efficiency reasons, we need to define two scenarios:
 
 **5096128347**
 
@@ -68,13 +77,11 @@ We use `ra` to first send **smallest** and then keep sending larger and larger v
   * You have smallest, now look at stacks. [`smallest` happens to be within reach] <- formalize conditions here. `ra` the `smallest` => a: _5243**1** b: _____
     * Formalization of "if [`smallest` happens to be within reach]"
       * if `smallest` == a[0], then `ra`
-      * else if `smallest` == a[1];
+      * else if `smallest` == a[1]
         * if `next` == a[0], then `sa` + `ra`
         * else `pb` + `ra`
       * else if `smallest` == a[z], then `0`
-      * else if `smallest` == a[z - 1]
-        * if `prev smallest` == a[z], **then what???**
-        * else `rra`
+      * else if `smallest` == a[z - 1] && step == 0, then `rra`
       * else if `smallest` == b[0], then `pa` + `ra`
       * else if `smallest` == b[1]
         * if `next` == b[0], then `sb` + `pa` + `ra`
@@ -97,14 +104,21 @@ We use `pa` to first send **largest** and then keep sending smaller and smaller 
 ## Project architecture
 
 ```
-                      ---arr_raw
-                      |                 ---init_stk(a)
-main(argc, argv) -----|--arr_ind        |              
+push_swap: the "sort the smallest value permanently" approach
+
+                                                                       ---arr_raw //malloc//
+                      ---handle_input //check for errors, get size//---|
+                      |                                                ---arr_ind //malloc//
+                      |
+main(argc, argv) -----|                 ---init_stk(a) //as linked list; malloc//
+                      |                 |
                       |                 |
                       ---go_sorting-----|
-                                        |              ---conds_if_val_in_a --> do op, print, return
-                                        |              |
-                                        ---find_n_swap-|
-                                                       |
-                                                       ---conds_if_val_in_b --> do op, print, return
+                                        |                 ---conds_if_val_in_a --> do op, print, return
+                                        |                 |
+                                        --- * find_n_swap-|
+                                                          |
+                                                          ---conds_if_val_in_b --> do op, print, return
+
+* one by one, while there exist numbers that have not been sent to their sorted position
 ```  
