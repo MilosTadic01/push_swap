@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/02 16:41:53 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/05 13:14:32 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ t_list	*init_stk(int *arr, int size);
 // sorting.c
 int		go_sorting(int *arr_raw, int *arr_ind, int size);
 void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b);
+int	isntflowing(t_list *stk, int end);
 int		isunsorted(t_list *stk, int end);
 
 // sifting.c

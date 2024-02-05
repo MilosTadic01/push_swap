@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 16:18:20 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 18:29:32 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/05 13:14:09 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,26 @@ int	isunsorted(t_list *stk, int end)
 	{
 		if (*(int *)stk->content >= *(int *)stk->next->content)
 			return (1);
+		stk = stk->next;
+	}
+	return (0);
+}
+
+int	isntflowing(t_list *stk, int end)
+{
+	int	i;
+	int	seams;
+
+	i = -1;
+	seams = 0;
+	while (stk && stk->next && ++i < end)
+	{
+		if (*(int *)stk->content >= *(int *)stk->next->content)
+		{
+			seams++;
+			if (seams > 1)
+				return (1);
+		}
 		stk = stk->next;
 	}
 	return (0);
