@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 16:18:20 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/05 13:14:09 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/05 17:45:44 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ int	go_sorting(int *arr_raw, int *arr_ind, int size)
 	vl.size = size;
 	vl.smol = -1;
 	vl.step = 0;
-	if (solvable_wo_b(arr_raw, arr_ind, size))
 	if (sifting_ok(arr_ind, size, &stk_a, &stk_b))
 		return (clearstk(&stk_a, &stk_b, 1));
 	while (++vl.smol < size)

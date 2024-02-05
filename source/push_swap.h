@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/05 13:14:32 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/05 17:45:35 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,14 @@ typedef struct op_numbers
 
 typedef struct positions
 {
+	int	sz_a;
 	int	pa0;
 	int	pa1;
-	int	pa2;
-	int	pazm2
 	int	pazm1;
 	int	paz;
+	int	sz_b;
 	int	pb0;
 	int	pb1;
-	int	pb2;
-	int	pbzm2;
 	int	pbzm1;
 	int	pbz;
 }	t_vip;
