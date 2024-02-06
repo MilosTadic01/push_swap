@@ -29,6 +29,7 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 	int	rotcount;
 
 	i = -1;
+	rotcount = 0;
 	mid = chunksz / 2;
 	if (!ischunk_revunsrtd(mid, chunksz, *stk_b)) // base case 1, you can loop outside of recursion too
 	{
@@ -114,6 +115,8 @@ void	ft_pb_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b)
 				op_rot(stk_a);
 				ft_printf("ra\n");
 			}
+			op_psh(stk_a, stk_b);
+			ft_printf("pb\n");
 		}
 	}
 }
