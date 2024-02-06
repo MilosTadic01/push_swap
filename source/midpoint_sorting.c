@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-int	ischunk_revunsrtd(int mid, int chunksz, t_list *stk_b)
+int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b)
 {
 	int	i;
 	t_list	*tocmp;
@@ -9,7 +9,7 @@ int	ischunk_revunsrtd(int mid, int chunksz, t_list *stk_b)
 	tocmp = NULL;
 	while (stk_b != NULL && i < chunksz) // just being extra by checking stk_b
 	{
-		if (*(int *)stk_b->content <= mid)
+		if (*(int *)stk_b->content >= midval)
 			stk_b = stk_b->next;
 		else
 		{
@@ -31,18 +31,18 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 	i = -1;
 	rotcount = 0;
 	mid = chunksz / 2;
-	if (!ischunk_revunsrtd(mid, chunksz, *stk_b)) // base case 1, you can loop outside of recursion too
+	if (!ischunk_revunsrtd(arr_ind[mid], mid, *stk_b)) // base case 1, you can loop outside of recursion too
 	{
-		while (chunksz-- > 0)
+		while (++i < mid)
 		{
-			if ((*(int *)(*stk_b)->content) > arr_ind[mid])
+			if ((*(int *)(*stk_b)->content) < arr_ind[mid])
 			{
 				op_psh(stk_b, stk_a);
 				ft_printf("pa\n");
 			}
 			else
 			{
-				while (*(int *)(*stk_b)->content <= arr_ind[mid])
+				while (*(int *)(*stk_b)->content >= arr_ind[mid])
 				{
 					rotcount++;
 					op_rot(stk_b);
@@ -62,7 +62,7 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 	{
 		while (chunksz-- > 0)
 		{
-			while ((*(int *)(*stk_b)->content) <= arr_ind[mid])
+			while ((*(int *)(*stk_b)->content) >= arr_ind[mid])
 			{
 				rotcount++;
 				op_rot(stk_b);
@@ -148,7 +148,7 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 		ft_pb_filter(arr_ind, mid, stk_a, stk_b);
 		midpoint_sort(&arr_ind[mid], mid, stk_a, stk_b);
 		// ft_pa_chunk(arr_ind, mid, stk_a, stk_b); // for v.1 loop
-		midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b); // for v.2 recursive
+		midpoint_pa(arr_ind, size, stk_a, stk_b); // for v.2 recursive
 	}
 }
 
