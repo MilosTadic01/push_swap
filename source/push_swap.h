@@ -34,6 +34,15 @@ typedef struct op_numbers
 void	push_swap(int argc, char **argv);
 t_list	*init_stk(int *arr, int size);
 
+// midpoint_sorting.c
+int	go_midpointing(int *arr_raw, int *arr_ind, int size);
+void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
+void	ft_sortsmall(t_list **stk_a);
+void	ft_pb_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b);
+void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b); // recursive v.2
+int	ischunk_revunsrtd(int mid, int chunksz, t_list *stk_b);
+
+// sorting.c
 int		go_sorting(int *arr_raw, int *arr_ind, int size);
 void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b);
 int		isunsorted(t_list *stk, int end);

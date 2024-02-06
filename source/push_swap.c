@@ -51,11 +51,16 @@ int	main(int argc, char **argv)
 	arr_ind = index_arr(arr_raw, size);
 	if (!arr_ind)
 		return (2);
-	if (!go_sorting(arr_raw, arr_ind, size))
+	if (!go_midpointing(arr_raw, arr_ind, size))
 	{
 		arr_raw = free_arrays(arr_raw, arr_ind);
 		return (3);
 	}
+	// if (!go_sorting(arr_raw, arr_ind, size))
+	// {
+	// 	arr_raw = free_arrays(arr_raw, arr_ind);
+	// 	return (3);
+	// }
 	free_arrays(arr_raw, arr_ind);
 	return (0);
 }
