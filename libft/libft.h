@@ -28,6 +28,7 @@ int		ft_isprint(int c);
 int		ft_iswhite(int c);
 int		ft_isplusminus(int c);
 int		ft_isintmacro(const char *c);
+int		ft_isprime(int nb);
 size_t	ft_strlen(const char *s);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);

@@ -222,6 +222,8 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	int	sent;
 
 	mid = size / 2;
+	if (size > 3 && (size / 2) % 2 == 1)
+		mid = size / 2 + 1;
 	sent = 0;
 	if (((*stk_a) != NULL && (*stk_a)->next == NULL) || \
 			(*stk_a)->next->next == NULL)
