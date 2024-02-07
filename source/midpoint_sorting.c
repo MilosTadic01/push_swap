@@ -22,6 +22,49 @@ int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b)
 	return (0);
 }
 
+void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.3
+{
+	int	mid;
+	int	i;
+	int	rotcount;
+
+	mid = chunksz / 2;
+	i = -1;
+	rotcount = 0;
+	if (chunksz < 3)
+	{
+		while (++i < chunksz)
+		{
+			while (*(int *)(*stk_b)->content < arr_ind[mid] && (*(int *)(*stk_b)->content != arr_ind[mid]))
+			{
+				rotcount++;
+				op_rot(stk_b);
+				ft_printf("rb\n");
+			}
+			if ((*(int *)(*stk_b)->content > arr_ind[mid]) || \
+				(chunksz == 1 && *(int *)(*stk_b)->content == arr_ind[mid]))
+			{
+				op_psh(stk_b, stk_a);
+				ft_printf("pa\n");
+			}
+		}
+		while (rotcount-- > 0)
+		{
+			op_revrot(stk_b);
+			ft_printf("rrb\n");
+		}
+		if (isunsorted(*stk_a, 2))
+		{
+			op_swp(stk_a);
+			ft_printf("sa\n");
+		}
+	}
+	else
+	{
+		midpoint_pa(&arr_ind[chunksz], mid, stk_a, stk_b);
+	}
+}
+/*
 void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.2
 {
 	int	i;
@@ -31,7 +74,7 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 	i = -1;
 	rotcount = 0;
 	mid = chunksz / 2;
-	if (!ischunk_revunsrtd(arr_ind[mid], mid, *stk_b)) // base case 1, you can loop outside of recursion too
+	if (!ischunk_revunsrtd(arr_ind[mid], chunksz, *stk_b)) // base case 1, you can loop outside of recursion too
 	{
 		while (++i < mid)
 		{
@@ -58,9 +101,9 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 			ft_printf("rrb\n");
 		}
 	}
-	else if (chunksz < 3) // base case 2 (for 7, 8 from video)
+	else if (mid < 3) // base case 2 (for 7, 8 from video)
 	{
-		while (chunksz-- > 0)
+		while (++i < mid)
 		{
 			while ((*(int *)(*stk_b)->content) >= arr_ind[mid])
 			{
@@ -87,8 +130,10 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 		// if (*(int *)(*stk_b)->content > arr_ind[mid])// no, not here
 		// ft_pa_filter?				// no, bc no good values to rrb
 		midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
+		midpoint_pa(arr_ind, mid, stk_a, stk_b);
 	}
 }
+*/
 
 void	ft_pb_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b)
 {
@@ -147,8 +192,7 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	{
 		ft_pb_filter(arr_ind, mid, stk_a, stk_b);
 		midpoint_sort(&arr_ind[mid], mid, stk_a, stk_b);
-		// ft_pa_chunk(arr_ind, mid, stk_a, stk_b); // for v.1 loop
-		midpoint_pa(arr_ind, size, stk_a, stk_b); // for v.2 recursive
+		midpoint_pa(arr_ind, mid, stk_a, stk_b); // for v.2 recursive
 	}
 }
 
@@ -162,5 +206,15 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 	if (!stk_a || !isunsorted(stk_a, size))
 		return (clearstk(&stk_a, &stk_b, 0));
 	midpoint_sort(arr_ind, size, &stk_a, &stk_b);
+	while (stk_a) //
+	{
+		ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
+		stk_a = stk_a->next; //
+	} //
+	while (stk_b) //
+	{
+		ft_printf("Content stk_b: %i\n", *(int *)stk_b->content); //
+		stk_b = stk_b->next; //
+	} //
 	return (clearstk(&stk_a, &stk_b, 1));
 }
