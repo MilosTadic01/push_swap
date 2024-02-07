@@ -39,7 +39,7 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size);
 void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
 void	ft_sortsmall(t_list **stk_a);
 void	ft_pb_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b);
-void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b); // recursive v.2
+int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b); // recursive v.2
 int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b);
 
 // sorting.c

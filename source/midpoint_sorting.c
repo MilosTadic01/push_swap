@@ -22,51 +22,37 @@ int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b)
 	return (0);
 }
 
-void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.3
+int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.3
 {
 	int	mid;
 	int	i;
 	int	rotcount;
+	int	sent;
 
 	mid = chunksz / 2;
 	i = -1;
 	rotcount = 0;
-	if (chunksz == 1)
+	sent = 0;
+	if (mid == 0)
 	{
-		while (*(int *)(*stk_b)->content != arr_ind[mid])
-		{
-			rotcount++;
-			op_rot(stk_b);
-			ft_printf("rb\n");
-		}
-		if (*(int *)(*stk_b)->content == arr_ind[mid])
-		{
-			op_psh(stk_b, stk_a);
-			ft_printf("pa\n");
-		}
-		while (rotcount-- > 0)
-		{
-			op_revrot(stk_b);
-			ft_printf("rrb\n");
-		}
+		op_psh(stk_b, stk_a);
+		ft_printf("pa\n");
+		return (1);
 	}
 	else if (chunksz == 2)
 	{
-		while (++i < chunksz)
+		while (++i < 2)
 		{
-			if ((*(int *)(*stk_b)->content > arr_ind[mid]))
+			while (*(int *)(*stk_b)->content < arr_ind[0])
+			{
+				rotcount++;
+				op_rot(stk_b);
+				ft_printf("rb\n");
+			}
+			if ((*(int *)(*stk_b)->content >= arr_ind[0]))
 			{
 				op_psh(stk_b, stk_a);
 				ft_printf("pa\n");
-			}
-			else
-			{
-				while (*(int *)(*stk_b)->content < arr_ind[mid])
-				{
-					rotcount++;
-					op_rot(stk_b);
-					ft_printf("rb\n");
-				}
 			}
 		}
 		while (rotcount-- > 0)
@@ -79,10 +65,31 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 			op_swp(stk_a);
 			ft_printf("sa\n");
 		}
+		return (2);
+	}
+	else if (mid == 1)
+	{
+		while (*(int *)(*stk_b)->content <= arr_ind[mid])
+		{
+			rotcount++;
+			op_rot(stk_b);
+			ft_printf("rb\n");
+		}
+		op_psh(stk_b, stk_a);
+		ft_printf("pa\n");
+		while (rotcount-- > 0)
+		{
+			op_revrot(stk_b);
+			ft_printf("rrb\n");
+		}
+		return (1);
 	}
 	else
 	{
-		midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
+		sent = midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
+		if (mid - sent > 0)
+			midpoint_pa(arr_ind, (mid - sent), stk_a, stk_b);
+		return (chunksz);
 		// if we have two left...
 		// I'm still convinced we have to call midpoint_pa a second time, probably
 		// best in the form of 'if' statement, though it might also be always necessary.
@@ -208,8 +215,10 @@ void	ft_sortsmall(t_list **stk_a)
 void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 {
 	int	mid;
+	int	sent;
 
 	mid = size / 2;
+	sent = 0;
 	if (((*stk_a) != NULL && (*stk_a)->next == NULL) || \
 			(*stk_a)->next->next == NULL)
 	{
@@ -221,7 +230,10 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	{
 		ft_pb_filter(arr_ind, mid, stk_a, stk_b);
 		midpoint_sort(&arr_ind[mid], mid, stk_a, stk_b);
-		midpoint_pa(arr_ind, mid, stk_a, stk_b); // for v.2 recursive
+		// midpoint_pa(arr_ind, mid, stk_a, stk_b); // for v.2 recursive
+		sent = midpoint_pa(arr_ind, mid, stk_a, stk_b); // v.3 recursive
+		if (mid - sent > 0)
+			midpoint_pa(arr_ind, (mid - sent), stk_a, stk_b);
 	}
 }
 
@@ -235,6 +247,7 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 	if (!stk_a || !isunsorted(stk_a, size))
 		return (clearstk(&stk_a, &stk_b, 0));
 	midpoint_sort(arr_ind, size, &stk_a, &stk_b);
+	midpoint_pa(arr_ind, size, &stk_a, &stk_b);
 	while (stk_a) //
 	{
 		ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
