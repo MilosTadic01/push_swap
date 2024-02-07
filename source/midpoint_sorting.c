@@ -22,6 +22,7 @@ int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b)
 	return (0);
 }
 
+// (chunksz - mid - 1) == how many to push
 int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.3
 {
 	int	mid;
@@ -67,22 +68,25 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 		}
 		return (2);
 	}
-	else if (mid == 1)
+	else if ((chunksz - mid - 1) < 3 && mid < ft_lstsize(*stk_b)) 
 	{
-		while (*(int *)(*stk_b)->content <= arr_ind[mid])
+		while (++i < (chunksz - mid - 1))
 		{
-			rotcount++;
-			op_rot(stk_b);
-			ft_printf("rb\n");
+			while (*(int *)(*stk_b)->content <= arr_ind[mid])
+			{
+				rotcount++;
+				op_rot(stk_b);
+				ft_printf("rb\n");
+			}
+			op_psh(stk_b, stk_a);
+			ft_printf("pa\n");
 		}
-		op_psh(stk_b, stk_a);
-		ft_printf("pa\n");
 		while (rotcount-- > 0)
 		{
 			op_revrot(stk_b);
 			ft_printf("rrb\n");
 		}
-		return (1);
+		return (i);
 	}
 	else
 	{
@@ -237,17 +241,42 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	}
 }
 
+/*
+static void	revsortsmol_n_pa(t_list **stk_b, int size)
+{
+	int	i;
+	int	j;
+	t_list	*head;
+
+	i = -1;
+	j = -1;
+	if (!(*stk_b))
+		return;
+	if (*stk_b && (*stk_b)->next)
+	{
+		while (++i < size)
+		{	head = *stk_b;
+			while (++j < size)
+			{
+				if (*(int)head->content < *(int)head->next->content)
+*/
+
+
 int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 {
 	t_list	*stk_a;
 	t_list	*stk_b;
+	int	sent;
 
 	stk_a = init_stk(arr_raw, size);
 	stk_b = NULL;
 	if (!stk_a || !isunsorted(stk_a, size))
 		return (clearstk(&stk_a, &stk_b, 0));
 	midpoint_sort(arr_ind, size, &stk_a, &stk_b);
-	midpoint_pa(arr_ind, size, &stk_a, &stk_b);
+	sent = midpoint_pa(arr_ind, (size / 4), &stk_a, &stk_b);
+	if ((size / 4) - sent > 0)
+		midpoint_pa(arr_ind, ((size / 4) - sent), &stk_a, &stk_b);
+	// revsortsmol_n_pa(stk_b, ft_lstsize(stk_b));
 	while (stk_a) //
 	{
 		ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
