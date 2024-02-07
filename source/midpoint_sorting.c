@@ -31,21 +31,42 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 	mid = chunksz / 2;
 	i = -1;
 	rotcount = 0;
-	if (chunksz < 3)
+	if (chunksz == 1)
+	{
+		while (*(int *)(*stk_b)->content != arr_ind[mid])
+		{
+			rotcount++;
+			op_rot(stk_b);
+			ft_printf("rb\n");
+		}
+		if (*(int *)(*stk_b)->content == arr_ind[mid])
+		{
+			op_psh(stk_b, stk_a);
+			ft_printf("pa\n");
+		}
+		while (rotcount-- > 0)
+		{
+			op_revrot(stk_b);
+			ft_printf("rrb\n");
+		}
+	}
+	else if (chunksz == 2)
 	{
 		while (++i < chunksz)
 		{
-			while (*(int *)(*stk_b)->content < arr_ind[mid] && (*(int *)(*stk_b)->content != arr_ind[mid]))
-			{
-				rotcount++;
-				op_rot(stk_b);
-				ft_printf("rb\n");
-			}
-			if ((*(int *)(*stk_b)->content > arr_ind[mid]) || \
-				(chunksz == 1 && *(int *)(*stk_b)->content == arr_ind[mid]))
+			if ((*(int *)(*stk_b)->content > arr_ind[mid]))
 			{
 				op_psh(stk_b, stk_a);
 				ft_printf("pa\n");
+			}
+			else
+			{
+				while (*(int *)(*stk_b)->content < arr_ind[mid])
+				{
+					rotcount++;
+					op_rot(stk_b);
+					ft_printf("rb\n");
+				}
 			}
 		}
 		while (rotcount-- > 0)
@@ -61,7 +82,15 @@ void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // r
 	}
 	else
 	{
-		midpoint_pa(&arr_ind[chunksz], mid, stk_a, stk_b);
+		midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
+		// if we have two left...
+		// I'm still convinced we have to call midpoint_pa a second time, probably
+		// best in the form of 'if' statement, though it might also be always necessary.
+		// So if 5, 6 were pa'd, then midpoint could return 2, we substract that from
+		// chunk size (6), and we know we have 4 elements left. We relay the 4 as info
+		// to the second call, but...how? The only option is as chunksz. And then...
+		// Ok, I see. So same arr_ind instead of &arr_ind[mid]?
+		// But new chunksz. But I already tried that...where did I go wrong?
 	}
 }
 /*
