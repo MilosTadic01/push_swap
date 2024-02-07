@@ -236,47 +236,24 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 		midpoint_sort(&arr_ind[mid], mid, stk_a, stk_b);
 		// midpoint_pa(arr_ind, mid, stk_a, stk_b); // for v.2 recursive
 		sent = midpoint_pa(arr_ind, mid, stk_a, stk_b); // v.3 recursive
-		if (mid - sent > 0)
-			midpoint_pa(arr_ind, (mid - sent), stk_a, stk_b);
+		while (mid - sent > 0)
+			sent += midpoint_pa(arr_ind, (mid - sent), stk_a, stk_b);
 	}
 }
-
-/*
-static void	revsortsmol_n_pa(t_list **stk_b, int size)
-{
-	int	i;
-	int	j;
-	t_list	*head;
-
-	i = -1;
-	j = -1;
-	if (!(*stk_b))
-		return;
-	if (*stk_b && (*stk_b)->next)
-	{
-		while (++i < size)
-		{	head = *stk_b;
-			while (++j < size)
-			{
-				if (*(int)head->content < *(int)head->next->content)
-*/
-
 
 int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 {
 	t_list	*stk_a;
 	t_list	*stk_b;
-	int	sent;
 
 	stk_a = init_stk(arr_raw, size);
 	stk_b = NULL;
 	if (!stk_a || !isunsorted(stk_a, size))
 		return (clearstk(&stk_a, &stk_b, 0));
 	midpoint_sort(arr_ind, size, &stk_a, &stk_b);
-	sent = midpoint_pa(arr_ind, (size / 4), &stk_a, &stk_b);
-	if ((size / 4) - sent > 0)
-		midpoint_pa(arr_ind, ((size / 4) - sent), &stk_a, &stk_b);
-	// revsortsmol_n_pa(stk_b, ft_lstsize(stk_b));
+	// sent = midpoint_pa(arr_ind, (size / 4), &stk_a, &stk_b);
+	// if ((size / 4) - sent > 0)
+	// 	midpoint_pa(arr_ind, ((size / 4) - sent), &stk_a, &stk_b);
 	while (stk_a) //
 	{
 		ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
