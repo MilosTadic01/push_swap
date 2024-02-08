@@ -91,9 +91,9 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 	else
 	{
 		sent = midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
-		if (mid - sent > 0)
-			midpoint_pa(arr_ind, (mid - sent), stk_a, stk_b);
-		return (chunksz);
+		while (mid - sent > 0)
+			sent += midpoint_pa(&arr_ind[mid], (mid - sent), stk_a, stk_b);
+		return (sent);
 		// if we have two left...
 		// I'm still convinced we have to call midpoint_pa a second time, probably
 		// best in the form of 'if' statement, though it might also be always necessary.
@@ -221,9 +221,8 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	int	mid;
 	int	sent;
 
-	mid = size / 2;
-	if (size > 3 && (size / 2) % 2 == 1)
-		mid = size / 2 + 1;
+	mid = ft_lstsize(*stk_a) / 2;
+	sent = size; // temp solution for 'size unused' warning, delete later?
 	sent = 0;
 	if (((*stk_a) != NULL && (*stk_a)->next == NULL) || \
 			(*stk_a)->next->next == NULL)
