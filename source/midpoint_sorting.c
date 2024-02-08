@@ -22,21 +22,22 @@ int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b)
 	return (0);
 }
 
-void	prt_stcks(t_list *a, t_list *b)
+void	prt_stcks(t_list *a, t_list *b, int midval)
 {
 	if (!a && !b)
 		return ;
-	ft_printf("Contents stack A: ");
-	while (a)
-	{
-		ft_printf("%i ", *(int *)a->content);
-		a = a->next;
-	}
+	ft_printf("Midval was: %i", midval);
 	ft_printf("\nContents stack B: ");
 	while (b)
 	{
 		ft_printf("%i ", *(int *)b->content);
 		b = b->next;
+	}
+	ft_printf("\nContents stack A: ");
+	while (a)
+	{
+		ft_printf("%i ", *(int *)a->content);
+		a = a->next;
 	}
 	ft_printf("\n");
 }
@@ -55,13 +56,15 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 	sent = 0;
 	if (mid == 0)
 	{
+		ft_printf("\nWe're in mid == 0\n");
 		op_psh(stk_b, stk_a);
 		ft_printf("pa\n");
-		prt_stcks(*stk_a, *stk_b);
+		prt_stcks(*stk_a, *stk_b, *(int *)(*stk_a)->content);
 		return (1);
 	}
 	else if (chunksz == 2)
 	{
+		ft_printf("\nWe're in chunksz == 2\n");
 		while (++i < 2)
 		{
 			while (*(int *)(*stk_b)->content < arr_ind[0])
@@ -74,7 +77,7 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 			{
 				op_psh(stk_b, stk_a);
 				ft_printf("pa\n");
-				prt_stcks(*stk_a, *stk_b);
+				prt_stcks(*stk_a, *stk_b, arr_ind[0]);
 			}
 		}
 		while (rotcount-- > 0)
@@ -91,6 +94,7 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 	}
 	else if ((chunksz - mid - 1) < 3 && mid < ft_lstsize(*stk_b)) 
 	{
+		ft_printf("\nWe're in (sz - mid - 1) < 3\n");
 		while (++i < (chunksz - mid - 1))
 		{
 			while (*(int *)(*stk_b)->content <= arr_ind[mid])
@@ -101,7 +105,7 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 			}
 			op_psh(stk_b, stk_a);
 			ft_printf("pa\n");
-			prt_stcks(*stk_a, *stk_b);
+			prt_stcks(*stk_a, *stk_b, arr_ind[mid]);
 		}
 		while (rotcount-- > 0)
 		{
@@ -131,76 +135,6 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 		// But new chunksz. But I already tried that...where did I go wrong?
 	}
 }
-/*
-void	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.2
-{
-	int	i;
-	int	mid;
-	int	rotcount;
-
-	i = -1;
-	rotcount = 0;
-	mid = chunksz / 2;
-	if (!ischunk_revunsrtd(arr_ind[mid], chunksz, *stk_b)) // base case 1, you can loop outside of recursion too
-	{
-		while (++i < mid)
-		{
-			if ((*(int *)(*stk_b)->content) < arr_ind[mid])
-			{
-				op_psh(stk_b, stk_a);
-				ft_printf("pa\n");
-			}
-			else
-			{
-				while (*(int *)(*stk_b)->content >= arr_ind[mid])
-				{
-					rotcount++;
-					op_rot(stk_b);
-					ft_printf("rb\n");
-				}
-				op_psh(stk_b, stk_a);
-				ft_printf("pa\n");
-			}
-		}
-		while (rotcount-- > 0)
-		{
-			op_revrot(stk_b);
-			ft_printf("rrb\n");
-		}
-	}
-	else if (mid < 3) // base case 2 (for 7, 8 from video)
-	{
-		while (++i < mid)
-		{
-			while ((*(int *)(*stk_b)->content) >= arr_ind[mid])
-			{
-				rotcount++;
-				op_rot(stk_b);
-				ft_printf("rb\n");
-			}
-			op_psh(stk_b, stk_a);
-			ft_printf("pa\n");
-		}
-		if ((*(int *)(*stk_a)->content) > (*(int *)(*stk_a)->next->content))
-		{
-			op_swp(stk_a);
-			ft_printf("sa\n");
-		}
-		while (++i < rotcount)
-		{
-			op_revrot(stk_b);
-			ft_printf("rrb\n");
-		}
-	}
-	else
-	{
-		// if (*(int *)(*stk_b)->content > arr_ind[mid])// no, not here
-		// ft_pa_filter?				// no, bc no good values to rrb
-		midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
-		midpoint_pa(arr_ind, mid, stk_a, stk_b);
-	}
-}
-*/
 
 void	ft_pb_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b)
 {
@@ -256,6 +190,7 @@ void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	{
 		if (isunsorted(*stk_a, INT_MAX))
 			ft_sortsmall(stk_a); // (0, 1)? or (0, 1, 2)?
+		ft_printf("+++++++++++++++ We've just visited ft_sortsmol\n"); // only at the end of pb-ing
 		return ;
 	}
 	else
