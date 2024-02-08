@@ -42,18 +42,40 @@ void	prt_stcks(t_list *a, t_list *b, int midval)
 	ft_printf("\n");
 }
 
-// (chunksz - mid - 1) == how many to push
-int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.3
+void	ft_pa_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b)
+{
+	int	i;
+
+	i = -1;
+	while(++i < mid)
+	{
+		if ((*(int *)(*stk_b)->content) > arr_ind[mid])
+		{
+			op_psh(stk_b, stk_a);
+			ft_printf("pa\n");
+		}
+		else
+		{
+			while ((*(int *)(*stk_b)->content) <= arr_ind[mid])
+			{
+				op_rot(stk_b);
+				ft_printf("rb\n");
+			}
+			op_psh(stk_b, stk_a);
+			ft_printf("pa\n");
+		}
+	}
+}
+
+void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.4
 {
 	int	mid;
 	int	i;
 	int	rotcount;
-	int	sent;
 
 	mid = chunksz / 2;
 	i = -1;
 	rotcount = 0;
-	sent = 0;
 	if (mid == 0)
 	{
 		ft_printf("\nWe're in mid == 0\n");
@@ -92,47 +114,10 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 		}
 		return (2);
 	}
-	else if ((chunksz - mid - 1) < 3 && mid < ft_lstsize(*stk_b)) 
-	{
-		ft_printf("\nWe're in (sz - mid - 1) < 3\n");
-		while (++i < (chunksz - mid - 1))
-		{
-			while (*(int *)(*stk_b)->content <= arr_ind[mid])
-			{
-				rotcount++;
-				op_rot(stk_b);
-				ft_printf("rb\n");
-			}
-			op_psh(stk_b, stk_a);
-			ft_printf("pa\n");
-			prt_stcks(*stk_a, *stk_b, arr_ind[mid]);
-		}
-		while (rotcount-- > 0)
-		{
-			op_revrot(stk_b);
-			ft_printf("rrb\n");
-		}
-		if (isunsorted(*stk_a, 2))
-		{
-			op_swp(stk_a);
-			ft_printf("sa\n");
-		}
-		return (i);
-	}
 	else
 	{
-		sent = midpoint_pa(&arr_ind[mid], mid, stk_a, stk_b);
-		while (mid - sent > 0)
-			sent += midpoint_pa(&arr_ind[mid], (mid - sent), stk_a, stk_b);
-		return (sent);
-		// if we have two left...
-		// I'm still convinced we have to call midpoint_pa a second time, probably
-		// best in the form of 'if' statement, though it might also be always necessary.
-		// So if 5, 6 were pa'd, then midpoint could return 2, we substract that from
-		// chunk size (6), and we know we have 4 elements left. We relay the 4 as info
-		// to the second call, but...how? The only option is as chunksz. And then...
-		// Ok, I see. So same arr_ind instead of &arr_ind[mid]?
-		// But new chunksz. But I already tried that...where did I go wrong?
+		flip_b(&arr_ind[mid], mid, stk_a, stk_b);
+		ft_pa_filter(arr_ind, mid, stk_a, stk_b);
 	}
 }
 
@@ -180,27 +165,20 @@ void	ft_sortsmall(t_list **stk_a)
 void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 {
 	int	mid;
-	int	sent;
 
-	mid = ft_lstsize(*stk_a) / 2;
-	sent = size; // temp solution for 'size unused' warning, delete later?
-	sent = 0;
+	mid = ft_lstsize(*stk_a) / 2; // and not size, right?
 	if (((*stk_a) != NULL && (*stk_a)->next == NULL) || \
 			(*stk_a)->next->next == NULL)
 	{
 		if (isunsorted(*stk_a, INT_MAX))
 			ft_sortsmall(stk_a); // (0, 1)? or (0, 1, 2)?
-		ft_printf("+++++++++++++++ We've just visited ft_sortsmol\n"); // only at the end of pb-ing
 		return ;
 	}
 	else
 	{
 		ft_pb_filter(arr_ind, mid, stk_a, stk_b);
 		midpoint_sort(&arr_ind[mid], mid, stk_a, stk_b);
-		// midpoint_pa(arr_ind, mid, stk_a, stk_b); // for v.2 recursive
-		sent = midpoint_pa(arr_ind, mid, stk_a, stk_b); // v.3 recursive
-		while (mid - sent > 0)
-			sent += midpoint_pa(arr_ind, (mid - sent), stk_a, stk_b);
+		flip_b(arr_ind, mid, stk_a, stk_b);		// v.4 bouncy recursive
 	}
 }
 
@@ -214,9 +192,6 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 	if (!stk_a || !isunsorted(stk_a, size))
 		return (clearstk(&stk_a, &stk_b, 0));
 	midpoint_sort(arr_ind, size, &stk_a, &stk_b);
-	// sent = midpoint_pa(arr_ind, (size / 4), &stk_a, &stk_b);
-	// if ((size / 4) - sent > 0)
-	// 	midpoint_pa(arr_ind, ((size / 4) - sent), &stk_a, &stk_b);
 	while (stk_a) //
 	{
 		ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
