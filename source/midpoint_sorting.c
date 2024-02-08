@@ -86,6 +86,11 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 			op_revrot(stk_b);
 			ft_printf("rrb\n");
 		}
+		if (isunsorted(*stk_a, 2))
+		{
+			op_swp(stk_a);
+			ft_printf("sa\n");
+		}
 		return (i);
 	}
 	else
