@@ -22,6 +22,25 @@ int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b)
 	return (0);
 }
 
+void	prt_stcks(t_list *a, t_list *b)
+{
+	if (!a && !b)
+		return ;
+	ft_printf("Contents stack A: ");
+	while (a)
+	{
+		ft_printf("%i ", *(int *)a->content);
+		a = a->next;
+	}
+	ft_printf("\nContents stack B: ");
+	while (b)
+	{
+		ft_printf("%i ", *(int *)b->content);
+		b = b->next;
+	}
+	ft_printf("\n");
+}
+
 // (chunksz - mid - 1) == how many to push
 int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.3
 {
@@ -38,6 +57,7 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 	{
 		op_psh(stk_b, stk_a);
 		ft_printf("pa\n");
+		prt_stcks(*stk_a, *stk_b);
 		return (1);
 	}
 	else if (chunksz == 2)
@@ -54,6 +74,7 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 			{
 				op_psh(stk_b, stk_a);
 				ft_printf("pa\n");
+				prt_stcks(*stk_a, *stk_b);
 			}
 		}
 		while (rotcount-- > 0)
@@ -80,6 +101,7 @@ int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // re
 			}
 			op_psh(stk_b, stk_a);
 			ft_printf("pa\n");
+			prt_stcks(*stk_a, *stk_b);
 		}
 		while (rotcount-- > 0)
 		{
