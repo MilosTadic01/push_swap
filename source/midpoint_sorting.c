@@ -23,7 +23,7 @@ int	isunsorted(t_list *stk, int chunksz)
 	return (0);
 }
 
-int	isrevunsrtd(t_list *stk, int chunksz)
+int	isrevunsorted(t_list *stk, int chunksz)
 {
 	int	i;
 
@@ -224,6 +224,16 @@ void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 		return ;
 	}
 	//					// chunksz is 6		| chunksz is 3
+	else if (!isrevunsorted(*stk_b, chunksz))
+	{
+		// ft_printf("** Was !revunsorted, chunksz was %i **\n", chunksz);
+		while (++i < chunksz)
+		{
+			op_psh(stk_b, stk_a);
+			ft_printf("pa\n");
+		}
+		return ;
+	}
 	pa_abovemid(&arr_ind[mid], chunksz - mid - 1, stk_a, stk_b); // sends 5, 6	| sends 9
 	flip_a(&arr_ind[mid + 1], chunksz - mid - 1, stk_a, stk_b);  // sees to 5, 6;returns | sees that the 9 is ok
 	// ft_printf("\n****gonna enter flip_b recursively****");
