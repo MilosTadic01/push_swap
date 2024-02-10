@@ -73,7 +73,7 @@ void	pb_belowmid(int *arr_ind, int howmny, t_list **stk_a, t_list **stk_b)
 			rotcount++;
 			op_rot(stk_a);
 			ft_printf("ra\n");
-			if (rotcount > 10)
+			if (rotcount > 1000)
 			{
 				ft_printf("Error in pb_belowmid: cuz all >= than %i\n", arr_ind[0]);
 				prt_stcks(*stk_a, *stk_b, arr_ind[0]);
@@ -102,10 +102,7 @@ void	flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 	int	restsz;
 
 	mid = chunksz / 2;
-	if (chunksz % 2 == 0)
-		restsz = chunksz - mid + 1;
-	else
-		restsz = chunksz - mid;
+	restsz = chunksz - mid;
 	if (chunksz <= 2)
 	{
 		ft_printf("We're in A and chunksz <= 2\n");
@@ -116,10 +113,12 @@ void	flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 		}
 		return ;
 	}
+	if (!isunsorted(*stk_a, chunksz))
+			return ;
 	pb_belowmid(&arr_ind[mid], mid, stk_a, stk_b);
-	flip_b(arr_ind, restsz, stk_a, stk_b);
 	ft_printf("\n****gonna enter flip_a from flip_a****");
-	flip_a(&arr_ind[mid], restsz, stk_a, stk_b);
+	flip_a(&arr_ind[mid], restsz, stk_a, stk_b);	// will see just 2 (9, 10), will return;
+	flip_b(arr_ind, mid, stk_a, stk_b);		// will tend to what belowmid has sent
 	// pa_abovemid(&arr_ind[mid], chunksz - mid - 1, stk_a, stk_b);
 	// flip_a(&arr_ind[mid + 1], chunksz - mid - 1, stk_a, stk_b);
 	// flip_b(arr_ind, restsz, stk_a, stk_b);
@@ -141,7 +140,7 @@ void	pa_abovemid(int *arr_ind, int howmny, t_list **stk_a, t_list **stk_b)
 			rotcount++;
 			op_rot(stk_b);
 			ft_printf("rb\n");
-			if (rotcount > 10)
+			if (rotcount > 1000)
 			{
 				ft_printf("Error in pa_abovemid: cuz all <= %i\n", arr_ind[0]);
 				ft_printf("Error in pa_abovemid: howmny == %i\n", howmny);
@@ -197,7 +196,7 @@ void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 				rotcount++;
 				op_rot(stk_b);
 				ft_printf("rb\n");
-				if (rotcount >  10)
+				if (rotcount > 1000)
 				{
 					ft_printf("Error in flip_b: cuz all less than %i\n", arr_ind[0]);
 					prt_stcks(*stk_a, *stk_b, arr_ind[0]);
@@ -208,9 +207,9 @@ void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 			{
 				op_psh(stk_b, stk_a);
 				ft_printf("pa\n");
-				prt_stcks(*stk_a, *stk_b, arr_ind[0]);
 			}
 		}
+		prt_stcks(*stk_a, *stk_b, arr_ind[0]);
 		while (rotcount-- > 0)
 		{
 			op_revrot(stk_b);
@@ -221,6 +220,7 @@ void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 			op_swp(stk_a);
 			ft_printf("sa\n");
 		}
+		prt_stcks(*stk_a, *stk_b, arr_ind[0]);
 		return ;
 	}
 	//					// chunksz is 6		| chunksz is 3
@@ -241,6 +241,8 @@ void	pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 
 	mid = size / 2;
 	rest = size - mid;
+	ft_printf("++ pb_all_check, size is %i, mid is %i\n", size, mid);
+	prt_stcks(*stk_a, *stk_b, arr_ind[0]);
 	if (size <= 2)
 	{
 		if (isunsorted(*stk_a, 2))
@@ -274,6 +276,8 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 		ft_printf("Content stk_b: %i\n", *(int *)stk_b->content); //
 		stk_b = stk_b->next; //
 	} //
+	if (!isunsorted(stk_a, INT_MAX))
+		ft_printf("OK\n");
 	return (clearstk(&stk_a, &stk_b, 1));
 }
 
