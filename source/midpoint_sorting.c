@@ -4,6 +4,7 @@ void	ft_sortsmall(t_list **stk_a)
 {
 	if (*stk_a && (*stk_a)->next)
 	{
+		// ft_printf("** we're in ft_sortsmall **\n");
 		op_swp(stk_a);
 		ft_printf("sa\n");
 	}
@@ -178,14 +179,6 @@ void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recurs
 		restsz = chunksz - mid;
 	i = -1;
 	rotcount = 0;
-	// if (chunksz == 1) //		| sends 10;
-	// {
-	// 	ft_printf("We're in B and chunksz == 1\n");
-	// 	op_psh(stk_b, stk_a);
-	// 	ft_printf("pa\n");
-	// 	prt_stcks(*stk_a, *stk_b, *(int *)(*stk_a)->content);
-	// 	return ;
-	// }
 	if (chunksz <= 2)
 	{
 		// ft_printf("We're in B and chunksz <= 2\n");
