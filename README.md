@@ -1,5 +1,11 @@
 # push_swap
-features stack (abstract), stack operations (swap, push, rotate and reverse), sorting, efficiency, computational complexity, getting next line
+features the most complex project architecture in the core curriculum of 42 so far as well as the following topics:
+- an introduction to the topic of computational complexity
+- stacks (the abstract notion), sorting values
+- the learning and the unlearning of the sorting efficiency terminology
+- sorting operations limitations
+
+It also features 'getting next line' in the bonus part, which might be a nice segway into the pipex project.
 
 ________________________________________________
 ## Available operations
@@ -38,10 +44,10 @@ ________________________________________________
 
 ## Algorithm considerations
 ### Philosophy of efficiency
-There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey into the considerations of efficiency.
+There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey of learning and subsequently ignoring the terminology of computational complexity.
 The assignment says:
 ```
-This project will make you sort data on a stack, with a limited set of instructions, using the **lowest possible number of actions**.
+This project will make you sort data on a stack, with a limited set of instructions, using the <b>lowest possible number of actions</b>.
 ```
 The word 'actions' does not actually refer to the operations like the condition checks or the pre-sorting initialization steps, but rather to the number of the authorized sorting actions only. Which frees the programmer to perform countless checks, but obfuscates the considerations of efficiency. Because ultimately, the evaluation sheet rates efficiency only according to the number of 'swaps' (authorized sorting steps) performed.
 ```
@@ -121,6 +127,8 @@ We use `pa` to first send **largest** and then keep sending smaller and smaller 
 
 ## Project architecture
 
+### My original project structure
+
 ```
 push_swap: the "sort the smallest value permanently" approach
 
@@ -132,11 +140,44 @@ main(argc, argv) -----|                 ---init_stk(a) //as linked list; malloc/
                       |                 |
                       |                 |
                       ---go_sorting-----|
-                                        |                 ---conds_if_val_in_a --> do op, print, return
-                                        |                 |
-                                        --- * find_n_swap-|
+                                        |   *while        ---conds_if_val_in_a --> do op, print, return
+                                        |   (i < size)    |
+                                        --- find_n_move---|
                                                           |
                                                           ---conds_if_val_in_b --> do op, print, return
 
-* one by one, while there exist numbers that have not been sent to their sorted position
+* one by one, the next 'smallest' value is permanently sent to the bottom of stack A
 ```  
+### My project structure after implementing the 'midpoint sort' algorithm
+
+```mermaid
+graph TD;
+    main-->handle_input;
+    main-->go_midpointing;
+    handle_input-->arr_raw;
+    handle_input-->arr_ind;
+    go_midpointing-->init_stkA;
+    go_midpointing-->pb_all_check;
+    pb_all_check-->pb_all_engine;
+    pb_all_check-->pb_all_check;
+    go_midpointing-->flip_b;
+    flip_b-->flip_a;
+    flip_b-->flip_b;
+    flip_a-->flip_b;
+    flip_a-->flip_a;
+```
+
+Notes:
+- **handle_input**
+  - malloc for value arrays
+  - error handling
+  - indexing values by size (yup, pre-sorting)
+- **init_stkA**
+  - malloc for the linked list and assign the values from the **arr_raw**; the **arr_ind** is used for sortedness checks later on
+- **pb_all_check** (a recursive function)
+  - **pb_all_engine**:`pb` half of A (all values below a midpoint)
+  - call **pb_all_check** again with a new (higher value) midpoint
+- **flip_b** <-> **flip_a** two recursive functions calling themselves and eachother until *base case*
+  - Note: they continously halve the sizes of each respective 'chunk' which they evaluate and bounce around via `pb` and `pa`
+
+The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while entirely omitting the need for evaluating the state of the entire stacks after each operation performed. I'm not gonna lie, I've spent 5 days tweaking
