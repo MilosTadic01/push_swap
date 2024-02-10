@@ -12,20 +12,6 @@
 
 #include "push_swap.h"
 
-int	isunsorted(t_list *stk, int end)
-{
-	int	i;
-
-	i = -1;
-	while (stk && stk->next && ++i < end)
-	{
-		if (*(int *)stk->content >= *(int *)stk->next->content)
-			return (1);
-		stk = stk->next;
-	}
-	return (0);
-}
-
 void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b)
 {
 	t_op		op;

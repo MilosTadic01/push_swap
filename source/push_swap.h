@@ -36,17 +36,23 @@ t_list	*init_stk(int *arr, int size);
 
 // midpoint_sorting.c
 int	go_midpointing(int *arr_raw, int *arr_ind, int size);
-void	midpoint_sort(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
-void	ft_sortsmall(t_list **stk_a);
-void	ft_pb_filter(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b);
-int	midpoint_pa(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b); // recursive v.2
+void	pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
+void	pb_all_engine(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b);
+
+void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b);
+void	pa_abovemid(int *arr_ind, int howmny, t_list **stk_a, t_list **stk_b);
+
+void	flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b);
+void	pb_belowmid(int *arr_ind, int howmny, t_list **stk_a, t_list **stk_b);
+
+int	isunsorted(t_list *stk, int chunksz);
+int	isrevunsorted(t_list *stk, int chunksz);
 void	prt_stcks(t_list *a, t_list *b, int midval);
-int	ischunk_revunsrtd(int midval, int chunksz, t_list *stk_b);
+void	ft_sortsmall(t_list **stk_a);
 
 // sorting.c
 int		go_sorting(int *arr_raw, int *arr_ind, int size);
 void	find_n_swap(int *arr_ind, t_vl *vl, t_list **stk_a, t_list **stk_b);
-int		isunsorted(t_list *stk, int end);
 
 int		input_str_valid(int argc, char **argv);
 int		get_size_shell(int argc, char **argv);
