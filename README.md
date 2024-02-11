@@ -1,14 +1,15 @@
 # push_swap
-features the most complex project architecture in the core curriculum of 42 so far as well as the following topics:
+features the most complex project architecture in the core curriculum of 42 so far, as well as the following topics:
 - an introduction to the topic of computational complexity
 - stacks (the abstract notion), sorting values
-- the learning and the unlearning of the sorting efficiency terminology
+- the learning and the subsequent unlearning of the sorting efficiency terminology
 - sorting operations limitations
 
-It also features 'getting next line' in the bonus part, which might be a nice segway into the pipex project.
+It also features 'getting next line' in the bonus part, which I hear might be a convenient segway into the pipex project.
 
-________________________________________________
 ## Available operations
+
+The following operations all count as one step each, even the dual ones (ss, rr, rrr). You must sort a list of numbers using only these, but with some important sidenotes. `_` signifies where a moved element had previously been.
 
 Beginning state | Operation applied | final state
 ----- | :------: | ------
@@ -22,65 +23,49 @@ a: 01234 <br> b: 56789 | rb <br> (rotate b) | a: 01234 <br> b: _6789**5**
 a: 01234 <br> b: 56789 | rr <br> (ra + rb) | a: _1234**0** <br> b: _6789**5**
 a: 01234 <br> b: 56789 | rra <br> (reverse rotate a) | a: **4**0123_ <br> b: 56789
 a: 01234 <br> b: 56789 | rrb <br> (reverse rotate b) | a: 01234 <br> b: **9**5678_
-a: 01234 <br> b: 56789 | rrr <br> (reverse rotate b) | a: **4**0123_ <br> b: **9**5678_
+a: 01234 <br> b: 56789 | rrr <br> (revrot a + revrot b) | a: **4**0123_ <br> b: **9**5678_
 
-________________________________________________
-a: 21543\
-b: _____
-
-- pb
-  - a: 1543
-  - b: 2
-- pb
-  - a: 543
-  - b: 12
-- ra
-  - a: 435
-  - b: 12
-- pb
-  - a: 35
- 
 ________________________________________________
 
 ## Algorithm considerations
 ### Philosophy of efficiency
 There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey of learning and subsequently ignoring the terminology of computational complexity.
 The assignment says:
-```
-This project will make you sort data on a stack, with a limited set of instructions, using the <b>lowest possible number of actions</b>.
-```
-The word 'actions' does not actually refer to the operations like the condition checks or the pre-sorting initialization steps, but rather to the number of the authorized sorting actions only. Which frees the programmer to perform countless checks, but obfuscates the considerations of efficiency. Because ultimately, the evaluation sheet rates efficiency only according to the number of 'swaps' (authorized sorting steps) performed.
-```
-[For 100 unsorted numbers...]
+
+> This project will make you sort data on a stack, with a limited set of instructions, using the lowest possible number of **actions**.
+
+The word 'actions' does not actually refer to the operations like the condition checks or the pre-sorting initialization steps, but rather to the number of the authorized sorting actions only. Which frees the programmer to perform countless checks, but obfuscates the considerations of efficiency. Because ultimately, the evaluation sheet rates efficiency only according to the number of 'steps' (the authorized sorting operations) performed.
+
+For 100 unsorted numbers
 - Less than 700 'steps': max score
-- Below 1500 'steps': min score
+- Just below 1500 'steps': min score
 - Over 1500 'steps': fail
 
-```
+
 ### Parameters?
 Whether and how many parameters to use will depend on whether keeping track of them would be considered to lower the algorithm efficiency. But if we had our hands untied, we could consider:
 * The `largest number` / the `smallest number`
+* The `previous largest number` / the `next smallest number`
 * The `indexes` (values **0 2 8 11 13** being indexed as **0 1 2 3 4**)
 * The `how many values smaller than` the `current` 
-* The `how many values greater than` the `current` 
+* The `how many values greater than` the `current`
+* The `easy to reach positions` such as `pos_stk_a[0]`, `pos_stk_a[1]`, ... , `pos_stk_a[z - 1]`, `pos_stk_a[z]`/
 
-**5096128347**
+### Being limited to 'steps'
+One might find themself asking whether applying other, well-known and straight-forward sorting algorithms on a copy of the raw list initially would be fair game. Why would you want to do that? E.g. to know that **-1** and **8** are in fact consequent values in an ultimately sorted list, where the elements are {-42, -1, 8, 9, 22}. Personally I think it doesn't really matter whether you do it, because any computational strain of iterating over the stacks looking for the `thenextnumber` might turn out to be unnoticeable in real time, or the iteration might be optimized to perform other usefull services as well. However, after several discussions with peers, I decided to justify my slapping on of a bubble sort, thus creating an array of upward indexed values, by adhering to reducing the overall computational complexity, which ultimately is the project's topic, even if distantly.
 
-#### 2.a: scenario (a)
+## The sorting algorithm
+
+I first (1) used my own algorithm, then (2) tried to rewrite it by adding a pivot point and utilizing `ss`, `rr` and `rrr` a lot, but ultimately (3) implemented a recursive algorithm which the author has baptised *Midpoint sort*.
+
+### 1. My original 'pa + ra' algorithm
+I first devised my own sorting algorithm, which was ultimately passing the tests (barely). I was happy with it. Until I discovered the number-of-steps limitation for 500 numbers, which was 11500. My algorithm was taking 31000 steps to sort that many numbers. Here is how it worked.
+
 We use `ra` to first send **smallest** and then keep sending larger and larger values to the bottom of the stack a, ensuring that `ra` == sorted
-* 2.a.1:
-  * we `pb` until the smallest number comes on top of a, indicating that a is sorted so far.
-  * we `rb` until we find `thenextnumber`? (assume we kept track)
-  * we `pa` and `ra` and the next number is sorted. Now `thenextnumber++` happens.
-* 2.a.2:
-  * we `pb` until the smallest number comes on top of a, indicating that a is sorted so far.
-  * we `rb` or `sb` or `rrb` depending which would get to `thenextnumber` more quickly. To find out, we iterated to look for it.
-  * we `pa` and `ra` and the next number is sorted. Now `thenextnumber++` happens.
-* 2.a.3 verbose:
-  * **15243** => `ra` `pb` `ra` `sa` `ra` `ra` `pa` `ra`
-  * **Note**: I was convinced by Natalie to used linked lists. Which begs the question, how do you store information about the position (as in arr[pos]) in linked lists?
-  * `int smallest`, `int next`, `step count`. Calculate to determine and assign 1 as the smallest. rm from `unsorted[]`
-  * You have smallest, now look at stacks. [`smallest` happens to be within reach] <- formalize conditions here. `ra` the `smallest` => a: _5243**1** b: _____
+* Version 2.a.3 of my original algorithm:
+**Note**: I was convinced by @nholbro to use linked lists as the data structure for sorting, rather than arrays. Which begs the question, how do you store information about the position (as in arr[pos]) in linked lists?
+  * `int smallest`, `int next`, `step count`. Determine these, then store them in a struct.
+  * You have smallest, now look at stacks. [`smallest` happens to be within reach]
     * Formalization of "if [`smallest` happens to be within reach]"
       * if `smallest` == a[0], then `ra`
       * else if `smallest` == a[1]
@@ -100,30 +85,79 @@ We use `ra` to first send **smallest** and then keep sending larger and larger v
         * add weigh: if b[pos] <= size(b) / 2, then `rb` until `smallest` is atop b
   * Calculate new `smallest`, calculate new `next`. Double while loop. If (number being tested) !> `unsorted[i++]` then `smallest = (number being tested)`, else test next number from the array. rm it from `unsorted[]`.
   * You have smallest, now look at stacks. Atop **a** is not smallest, abottom **a** is smallest, atop **b** is nothing, abottom **b** is nothing. `pb` the 5 => a: _2431 b: **5**
-#### 2.b: scenario (b)
-We use `pa` to first send **largest** and then keep sending smaller and smaller values to the top of the stack a, ensuring that `pa` == sorted
-  - b: 412
-- pb
-  - a: 5
-  - b: 3412
+
+An example of how it works:
+  * **15243** => `ra` `pb` `ra` `sa` `ra` `ra` `pa` `ra` => **12345**
  
-#### 3.0 The new 'sifting' algorithm
-* While (++i < size) // so for five elements, we count to five, push those below the half to stk_b and perform additional ops if appropriate
-  * init vip;
-  * else if (pa0 < arr_ind[half])
-    NOW ADJACENCIES FIRST:
-    * if (pa0 - 1 == paz)
-      * if
-      * else
-        * `rra`
-    AND GENERAL SORTEDNESS AFTER:
-    * if (pa1 < arr_ind[half]) && (pa0 > pa1)
-      * if (pb0 < pb1)
-        * `ss` + `pb`
-      * else
-        * `sa` + `pb`
-    * else
-      * `pb`
+### 2. My new 'sifting' algorithm
+This algorithm was meaning well and was going to maximize the utilization of `ss`, `rr` and `rrr` but I realized it would end up having similar shortcomings as my first one and was still not ready to accept that I needed to utilize extensive structs or that I needed to triple the number of conditions. So I opted for accepting that I needed recursion instead.
+
+I never completed a sketch of this algorithm and it's for the best. I don't find the number of conditions triple the size of (1) a very appealing notion.
+
+### 3. Midpoint sort
+
+There seem to be similarities between 'Quick sort' and 'Midpoint sort', but I'd decided I needed close, customized guidance with complex recursion, so I've made my choice and relied on [this description of the algorithm](https://www.youtube.com/watch?v=7KW59UO55TQ&t=184s) by the author himself. I find this 'Midpoint sort' to be quite impressive conceptually. Unfortunately however, a lack of examples in the video had me struggling with the implementation quite a bit. But I've somehow tamed the monster. First, (almost) everything is sent from A to B.
+
+This function isn't part of 'flipping' the stacks or sending chunk halves back and forth between them, it's only in charge of sending (almost) all to stack B.
+```C
+void  pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
+{
+  int mid = size / 2;
+  int rest = size - mid;
+
+  // Base case:
+  if (size <= 2)
+
+  // Recursive case:
+  pb_all_engine(arr_ind, mid, stk_a, stk_b);       // non-recursive, just sends all values below midpoint up to 'mid' times
+  pb_all_check(&arr_ind[mid], rest, stk_a, stk_b); // recursive
+  flip_b(arr_ind, mid, stk_a, stk_b);              // recursive
+} 
+```
+Next, pb_all_check returns when there's only two values left in stk_a, and then flip_b is called for the first time, where `mid` is equal to 1 or 2 and is passed as an argument to flip_b to relay the `chunk size` to be considered in there.
+
+```C
+void  flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
+{
+  mid = chunksz / 2;
+  if (chunksz % 2 == 0)
+    restsz = chunksz - mid + 1;
+  else
+    restsz = chunksz - mid;
+
+  // Base case:
+  if (chunksz <= 2)
+
+  // Recursive case:
+  pa_abovemid(&arr_ind[mid], chunksz - mid - 1, stk_a, stk_b);  // non-recursive
+  flip_a(&arr_ind[mid + 1], chunksz - mid - 1, stk_a, stk_b);   // recursive
+  flip_b(arr_ind, restsz, stk_a, stk_b);                        // recursive
+
+  // pa_abovemid and its counterpart pa_belowmid are non-recursive. They just `pa` and `pb`
+  // a number of elements above and below a given midpoint respectively.
+}
+```
+Compare the recursive cases of flip_b and flip_a. Note that:
+* flip_b is called from within flip_b to deal with the 'rest', i.e. the chunk values above and including the 'current' B pivot point
+* flip_a is called from within flip_a to deal with the 'rest', i.e. the chunk values above and including the 'current' A pivot point
+* also, somewhat surprisingly, notice the order in which flip_a and flip_b are called from within both functions - it's the same order
+
+```C
+void  flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
+{
+  mid = chunksz / 2;
+  restsz = chunksz - mid;
+
+  // Base case:
+  if (chunksz <= 2)
+
+  // Recursive case:
+  pb_belowmid(&arr_ind[mid], mid, stk_a, stk_b);  // non-recursive
+  flip_a(&arr_ind[mid], restsz, stk_a, stk_b);    // recursive
+  flip_b(arr_ind, mid, stk_a, stk_b);             // recursive
+}
+```
+
 
 ## Project architecture
 
@@ -167,9 +201,10 @@ graph TD;
     flip_a-->flip_a;
 ```
 
-Notes:
+Notes on 'midpoint sort' flow:
 - **handle_input**
-  - malloc for value arrays
+  - parse the command line arguments
+  - malloc for the two value arrays (raw and sorted (indexed))
   - error handling
   - indexing values by size (yup, pre-sorting)
 - **init_stkA**
@@ -180,4 +215,4 @@ Notes:
 - **flip_b** <-> **flip_a** two recursive functions calling themselves and eachother until *base case*
   - Note: they continously halve the sizes of each respective 'chunk' which they evaluate and bounce around via `pb` and `pa`
 
-The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while entirely omitting the need for evaluating the state of the entire stacks after each operation performed. I'm not gonna lie, I've spent 5 days tweaking
+The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while symultaneously entirely omitting the need for evaluating the state of the entire stacks after each operation performed. Meaning no extensive structs or iterating over the entire chunks after each step are needed, which I think is quite elegant. However, I'm not gonna lie, I've spent 3 whole days tweaking the order of the recursive function calls and the exact 'chunk size' arguments passed to each one of them, and I'm still not sure that I confidently understand why I was unable to deal with those 'chunk size' calculations in a more succint and more legible way.
