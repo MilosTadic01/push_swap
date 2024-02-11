@@ -1,7 +1,8 @@
 # push_swap
 features the most complex project architecture in the core curriculum of 42 so far, as well as the following topics:
 - an introduction to the topic of computational complexity
-- stacks (the abstract notion), sorting values
+- stacks (the abstract notion)
+- sorting values
 - the learning and the subsequent unlearning of the sorting efficiency terminology
 - sorting operations limitations
 
@@ -9,7 +10,7 @@ It also features 'getting next line' in the bonus part, which I hear might be a 
 
 ## Available operations
 
-The following operations all count as one step each, even the dual ones (ss, rr, rrr). You must sort a list of numbers using only these, but with some important sidenotes. `_` signifies where a moved element had previously been.
+The following operations all count as one step each, including the dual ones (ss, rr, rrr). One must sort a list of numbers using only these, but with some [relevant sidenotes](#being-limited-to-steps) regarding the topic of computational complexity. In the table below, the symbol `_` signifies where a moved element had previously been.
 
 Beginning state | Operation applied | final state
 ----- | :------: | ------
@@ -29,30 +30,98 @@ ________________________________________________
 
 ## Algorithm considerations
 ### Philosophy of efficiency
-There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey of learning and subsequently ignoring the terminology of computational complexity.
+There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey of learning and subsequently ignoring the general terminology of computational complexity.
 The assignment says:
 
 > This project will make you sort data on a stack, with a limited set of instructions, using the lowest possible number of **actions**.
 
-The word 'actions' does not actually refer to the operations like the condition checks or the pre-sorting initialization steps, but rather to the number of the authorized sorting actions only. Which frees the programmer to perform countless checks, but obfuscates the considerations of efficiency. Because ultimately, the evaluation sheet rates efficiency only according to the number of 'steps' (the authorized sorting operations) performed.
+The word 'actions' does not actually refer to the elementary operations like the condition checks or any "pre-sorting" initialization steps on a copy of the list, but rather to the number of the authorized sorting actions only. Which frees the programmer to perform countless checks, but obfuscates the considerations of efficiency. Because ultimately, the evaluation sheet rates efficiency only according to the number of 'steps' performed. As an example for a list of 100 unsorted numbers:
 
-For 100 unsorted numbers
 - Less than 700 'steps': max score
 - Just below 1500 'steps': min score
 - Over 1500 'steps': fail
 
 
 ### Parameters?
-Whether and how many parameters to use will depend on whether keeping track of them would be considered to lower the algorithm efficiency. But if we had our hands untied, we could consider:
+Whether and how many parameters to keep track of or calculate dynamically will depend on how we approach the topic of algorithm efficiency i.e. computational complexity. But again, this project is not evaluated based on the elementary operations in the traditional sense of computational complexity. They are not accounted for at all. On a broad range of possible parameters, we could consider:
 * The `largest number` / the `smallest number`
 * The `previous largest number` / the `next smallest number`
 * The `indexes` (values **0 2 8 11 13** being indexed as **0 1 2 3 4**)
-* The `how many values smaller than` the `current` 
-* The `how many values greater than` the `current`
+* The `how many values smaller/greater than` the `current number`
 * The `easy to reach positions` such as `pos_stk_a[0]`, `pos_stk_a[1]`, ... , `pos_stk_a[z - 1]`, `pos_stk_a[z]`/
+* The `steps cost` for sorting a given number
+* The `chunk size` if we divided the list into segments during sorting (relevant to a recursive approach)
 
 ### Being limited to 'steps'
 One might find themself asking whether applying other, well-known and straight-forward sorting algorithms on a copy of the raw list initially would be fair game. Why would you want to do that? E.g. to know that **-1** and **8** are in fact consequent values in an ultimately sorted list, where the elements are {-42, -1, 8, 9, 22}. Personally I think it doesn't really matter whether you do it, because any computational strain of iterating over the stacks looking for the `thenextnumber` might turn out to be unnoticeable in real time, or the iteration might be optimized to perform other usefull services as well. However, after several discussions with peers, I decided to justify my slapping on of a bubble sort, thus creating an array of upward indexed values, by adhering to reducing the overall computational complexity, which ultimately is the project's topic, even if distantly.
+
+
+
+
+
+
+## Project architecture
+
+### My original project structure
+
+```
+push_swap: the "sort the smallest value permanently" approach
+
+                                                                       ---arr_raw //malloc//
+                      ---handle_input //check for errors, get size//---|
+                      |                                                ---arr_ind //malloc//
+                      |
+main(argc, argv) -----|                 ---init_stk(a) //as linked list; malloc//
+                      |                 |
+                      |                 |
+                      ---go_sorting-----|
+                                        |   *while        ---conds_if_val_in_a --> do op, print, return
+                                        |   (i < size)    |
+                                        --- find_n_move---|
+                                                          |
+                                                          ---conds_if_val_in_b --> do op, print, return
+
+* one by one, the next 'smallest' value is permanently sent to the bottom of stack A
+```  
+### My project structure after implementing the 'midpoint sort' algorithm
+
+```mermaid
+graph TD;
+    main-->handle_input;
+    main-->go_midpointing;
+    handle_input-->arr_raw;
+    handle_input-->arr_ind;
+    go_midpointing-->init_stkA;
+    go_midpointing-->pb_all_check;
+    pb_all_check-->pb_all_engine;
+    pb_all_check-->pb_all_check;
+    go_midpointing-->flip_b;
+    flip_b-->flip_a;
+    flip_b-->flip_b;
+    flip_a-->flip_b;
+    flip_a-->flip_a;
+```
+
+Notes on 'midpoint sort' flow:
+- **handle_input**
+  - parse the command line arguments
+  - malloc for the two value arrays (raw and sorted (indexed))
+  - error handling
+  - indexing values by size (yup, pre-sorting)
+- **init_stkA**
+  - malloc for the linked list and assign the values from the **arr_raw**; the **arr_ind** is used for sortedness checks later on
+- **pb_all_check** (a recursive function)
+  - **pb_all_engine**:`pb` half of A (all values below a midpoint)
+  - call **pb_all_check** again with a new (higher value) midpoint
+- **flip_b** <-> **flip_a** two recursive functions calling themselves and eachother until *base case*
+  - Note: they continously halve the sizes of each respective 'chunk' which they evaluate and bounce around via `pb` and `pa`
+
+The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while symultaneously entirely omitting the need for evaluating the state of the entire stacks after each operation performed. Meaning no extensive structs or iterating over the entire chunks after each step are needed, which I think is quite elegant. However, I'm not gonna lie, I've spent 3 whole days tweaking the order of the recursive function calls and the exact 'chunk size' arguments passed to each one of them, and I'm still not sure that I confidently understand why I was unable to deal with those 'chunk size' calculations in a more succint and more legible way.
+
+
+
+
+
 
 ## The sorting algorithm
 
@@ -96,9 +165,9 @@ I never completed a sketch of this algorithm and it's for the best. I don't find
 
 ### 3. Midpoint sort
 
-There seem to be similarities between 'Quick sort' and 'Midpoint sort', but I'd decided I needed close, customized guidance with complex recursion, so I've made my choice and relied on [this description of the algorithm](https://www.youtube.com/watch?v=7KW59UO55TQ&t=184s) by the author himself. I find this 'Midpoint sort' to be quite impressive conceptually. Unfortunately however, a lack of examples in the video had me struggling with the implementation quite a bit. But I've somehow tamed the monster. First, (almost) everything is sent from A to B.
+There seem to be similarities between 'Quick sort' and 'Midpoint sort'. However at this point the intertwining of multiple recursive functions seemed inevitable and I'd decided I needed guidance for that, so I've made my choice and relied on [this description of the algorithm](https://www.youtube.com/watch?v=7KW59UO55TQ&t=184s) by the author himself, which had the benefit of relating to the project directly. I find the 'Midpoint sort' to be quite impressive conceptually. Unfortunately however, a lack of examples in the video had me struggling with the implementation quite a bit. But I've somehow tamed the monster. First, (almost) everything is sent from A to B in a recursive function that functionally only ever returns into itself, so that's easy to deal with.
 
-This function isn't part of 'flipping' the stacks or sending chunk halves back and forth between them, it's only in charge of sending (almost) all to stack B.
+This function isn't part of 'flipping' the stacks or sending chunk halves back and forth between them, it's only in charge of sending (almost) all to stack B as a first step.
 ```C
 void  pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 {
@@ -159,60 +228,4 @@ void  flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
 ```
 
 
-## Project architecture
 
-### My original project structure
-
-```
-push_swap: the "sort the smallest value permanently" approach
-
-                                                                       ---arr_raw //malloc//
-                      ---handle_input //check for errors, get size//---|
-                      |                                                ---arr_ind //malloc//
-                      |
-main(argc, argv) -----|                 ---init_stk(a) //as linked list; malloc//
-                      |                 |
-                      |                 |
-                      ---go_sorting-----|
-                                        |   *while        ---conds_if_val_in_a --> do op, print, return
-                                        |   (i < size)    |
-                                        --- find_n_move---|
-                                                          |
-                                                          ---conds_if_val_in_b --> do op, print, return
-
-* one by one, the next 'smallest' value is permanently sent to the bottom of stack A
-```  
-### My project structure after implementing the 'midpoint sort' algorithm
-
-```mermaid
-graph TD;
-    main-->handle_input;
-    main-->go_midpointing;
-    handle_input-->arr_raw;
-    handle_input-->arr_ind;
-    go_midpointing-->init_stkA;
-    go_midpointing-->pb_all_check;
-    pb_all_check-->pb_all_engine;
-    pb_all_check-->pb_all_check;
-    go_midpointing-->flip_b;
-    flip_b-->flip_a;
-    flip_b-->flip_b;
-    flip_a-->flip_b;
-    flip_a-->flip_a;
-```
-
-Notes on 'midpoint sort' flow:
-- **handle_input**
-  - parse the command line arguments
-  - malloc for the two value arrays (raw and sorted (indexed))
-  - error handling
-  - indexing values by size (yup, pre-sorting)
-- **init_stkA**
-  - malloc for the linked list and assign the values from the **arr_raw**; the **arr_ind** is used for sortedness checks later on
-- **pb_all_check** (a recursive function)
-  - **pb_all_engine**:`pb` half of A (all values below a midpoint)
-  - call **pb_all_check** again with a new (higher value) midpoint
-- **flip_b** <-> **flip_a** two recursive functions calling themselves and eachother until *base case*
-  - Note: they continously halve the sizes of each respective 'chunk' which they evaluate and bounce around via `pb` and `pa`
-
-The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while symultaneously entirely omitting the need for evaluating the state of the entire stacks after each operation performed. Meaning no extensive structs or iterating over the entire chunks after each step are needed, which I think is quite elegant. However, I'm not gonna lie, I've spent 3 whole days tweaking the order of the recursive function calls and the exact 'chunk size' arguments passed to each one of them, and I'm still not sure that I confidently understand why I was unable to deal with those 'chunk size' calculations in a more succint and more legible way.
