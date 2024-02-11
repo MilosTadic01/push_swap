@@ -29,7 +29,9 @@ a: 01234 <br> b: 56789 | rrr <br> (revrot a + revrot b) | a: **4**0123_ <br> b: 
 ________________________________________________
 
 ## Algorithm considerations
+
 ### Philosophy of efficiency
+
 There is a discrepancy between what the assignment PDF describes and what the evaluation sheet evaluates, which initiates a journey of learning and subsequently ignoring the general terminology of computational complexity.
 The assignment says:
 
@@ -105,7 +107,7 @@ graph TD;
 Notes on 'midpoint sort' flow:
 - **handle_input**
   - parse the command line arguments
-  - malloc for the two value arrays (raw and sorted (indexed))
+  - malloc for the two value arrays (raw and "pre-sorted" (indexed))
   - error handling
   - indexing values by size (yup, pre-sorting)
 - **init_stkA**
@@ -113,10 +115,9 @@ Notes on 'midpoint sort' flow:
 - **pb_all_check** (a recursive function)
   - **pb_all_engine**:`pb` half of A (all values below a midpoint)
   - call **pb_all_check** again with a new (higher value) midpoint
-- **flip_b** <-> **flip_a** two recursive functions calling themselves and eachother until *base case*
+- **flip_b** <-> **flip_a** two recursive functions calling themselves and eachother until *base case*, which ultimately will produce a sorted stack A
   - Note: they continously halve the sizes of each respective 'chunk' which they evaluate and bounce around via `pb` and `pa`
 
-The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while symultaneously entirely omitting the need for evaluating the state of the entire stacks after each operation performed. Meaning no extensive structs or iterating over the entire chunks after each step are needed, which I think is quite elegant. However, I'm not gonna lie, I've spent 3 whole days tweaking the order of the recursive function calls and the exact 'chunk size' arguments passed to each one of them, and I'm still not sure that I confidently understand why I was unable to deal with those 'chunk size' calculations in a more succint and more legible way.
 
 
 
@@ -127,12 +128,14 @@ The concept of **chunk sizes** is crucial to minimizing the number of sorting op
 
 I first (1) used my own algorithm, then (2) tried to rewrite it by adding a pivot point and utilizing `ss`, `rr` and `rrr` a lot, but ultimately (3) implemented a recursive algorithm which the author has baptised *Midpoint sort*.
 
-### 1. My original 'pa + ra' algorithm
+### (a) My original 'pa + ra' algorithm
 I first devised my own sorting algorithm, which was ultimately passing the tests (barely). I was happy with it. Until I discovered the number-of-steps limitation for 500 numbers, which was 11500. My algorithm was taking 31000 steps to sort that many numbers. Here is how it worked.
 
+<details>
+	<summary>sketch of the pa + ra algorithm</summary>
+  
 We use `ra` to first send **smallest** and then keep sending larger and larger values to the bottom of the stack a, ensuring that `ra` == sorted
 * Version 2.a.3 of my original algorithm:
-**Note**: I was convinced by @nholbro to use linked lists as the data structure for sorting, rather than arrays. Which begs the question, how do you store information about the position (as in arr[pos]) in linked lists?
   * `int smallest`, `int next`, `step count`. Determine these, then store them in a struct.
   * You have smallest, now look at stacks. [`smallest` happens to be within reach]
     * Formalization of "if [`smallest` happens to be within reach]"
@@ -155,19 +158,45 @@ We use `ra` to first send **smallest** and then keep sending larger and larger v
   * Calculate new `smallest`, calculate new `next`. Double while loop. If (number being tested) !> `unsorted[i++]` then `smallest = (number being tested)`, else test next number from the array. rm it from `unsorted[]`.
   * You have smallest, now look at stacks. Atop **a** is not smallest, abottom **a** is smallest, atop **b** is nothing, abottom **b** is nothing. `pb` the 5 => a: _2431 b: **5**
 
-An example of how it works:
-  * **15243** => `ra` `pb` `ra` `sa` `ra` `ra` `pa` `ra` => **12345**
+</details>
+
+An example of how it works: **15243** => `ra` `pb` `ra` `sa` `ra` `ra` `pa` `ra` => **12345**
  
-### 2. My new 'sifting' algorithm
+### (b) My updated 'sifting' algorithm
 This algorithm was meaning well and was going to maximize the utilization of `ss`, `rr` and `rrr` but I realized it would end up having similar shortcomings as my first one and was still not ready to accept that I needed to utilize extensive structs or that I needed to triple the number of conditions. So I opted for accepting that I needed recursion instead.
 
-I never completed a sketch of this algorithm and it's for the best. I don't find the number of conditions triple the size of (1) a very appealing notion.
+I never completed a sketch of this algorithm and it's for the best. I don't find the number of conditions triple the size of (a) a very appealing notion.
 
-### 3. Midpoint sort
+### (c) Midpoint sort - the one that got the job done
 
-There seem to be similarities between 'Quick sort' and 'Midpoint sort'. However at this point the intertwining of multiple recursive functions seemed inevitable and I'd decided I needed guidance for that, so I've made my choice and relied on [this description of the algorithm](https://www.youtube.com/watch?v=7KW59UO55TQ&t=184s) by the author himself, which had the benefit of relating to the project directly. I find the 'Midpoint sort' to be quite impressive conceptually. Unfortunately however, a lack of examples in the video had me struggling with the implementation quite a bit. But I've somehow tamed the monster. First, (almost) everything is sent from A to B in a recursive function that functionally only ever returns into itself, so that's easy to deal with.
+#### What is it
 
-This function isn't part of 'flipping' the stacks or sending chunk halves back and forth between them, it's only in charge of sending (almost) all to stack B as a first step.
+There seem to be similarities between 'Quick sort' and 'Midpoint sort'. However at this point the intertwining of multiple recursive functions seemed inevitable and I'd decided I needed guidance for that, so I've made my choice and relied on [this description of the algorithm](https://www.youtube.com/watch?v=7KW59UO55TQ&t=184s) by the author himself, which had the benefit of relating to the project directly. I find the 'Midpoint sort' to be very impressive conceptually. Unfortunately however, a lack of examples in the video had me struggling with the implementation quite a bit. But I've somehow tamed the dual recursion. I don't think I can competently fully explain the midpoint algorithm, and to that purpose, I'd recommend you to watch the video. And if you're then interested in implementing this algorithm and find that the video isn't telling you everything, perhaps this GitHub page can be of assistance.
+
+#### How my implementation works
+
+* First, (almost) everything is sent from A to B in a recursive function that functionally only ever returns into itself, so that's easy to deal with.
+* After this, the bouncing and flipping above and below respective midpoints begins, which will ultimately produce a sorted stack A.
+  * 'bouncing' refers to the `pa` and `pb` taking place
+  * 'flipping' refers to the controlled and tracked combination of `rx` and `rrx` each time a value is inappropriate to `pa`/`pb` because it is not higher/lower than midpoint. So if say we're in the process of `pa`-ing, but `pa` is not appropriate for the value currently at the top of stack B, we 'tuck' it underneath the stack using `rb` and take note that we've done so. Later, we `rrb` as many times as we've `rb`-ed.
+
+#### Crucial concepts and why recursion
+
+The concept of **chunk sizes** is crucial to minimizing the number of sorting operations, while symultaneously entirely omitting the need for evaluating the state of the entire stacks after each operation performed. Meaning no extensive structs or iterating over the entire chunks after each step are needed, which I think is quite elegant. However, I'm not gonna lie, I've spent 3 whole days tweaking the order of the recursive function calls and the exact `chunksize` arguments passed to each one of them, and I'm still not sure that I confidently understand why I was unable to deal with those chunk size' calculations in a more succint and more legible way.
+
+Besides keeping track of chunk sizes, which we can easily dynamically calculate the midpoint from, another crucial thing to dynamically calculate and keep track of is the size of the **rest of chunk**. Having to pass this `restsize` to something is in fact the bottom-line reason why the functions flip_a and flip_b are not only calling each other, but also themselves. And it makes the manipulating of the function calls inside each *recursive case* and passing the correct integer values to them as arguments a challenge.
+
+## The three recursive functions in my implementation of Midpoint sort
+
+### 1. `pb_all_check`: pb (almost) everything
+
+This function isn't part of 'flipping and bouncing' the stacks or sending chunk halves back and forth between them, it's only in charge of sending (almost) all the numbers to stack B as a first step, but also of relaying the chunk sizes that will be relevant to the 'flipping and bouncing' subsequently.
+
+Next, pb_all_check returns when there's only two values left in stk_a, and then flip_b is called for the first time, where `mid` is equal to 1 or 2 and is passed as an argument to flip_b to relay the `chunk size` to be considered in there.
+
+<details>
+	<summary>pb_all_check</summary>
+  
 ```C
 void  pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 {
@@ -180,10 +209,18 @@ void  pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
   // Recursive case:
   pb_all_engine(arr_ind, mid, stk_a, stk_b);       // non-recursive, just sends all values below midpoint up to 'mid' times
   pb_all_check(&arr_ind[mid], rest, stk_a, stk_b); // recursive
-  flip_b(arr_ind, mid, stk_a, stk_b);              // recursive
+  flip_b(arr_ind, mid, stk_a, stk_b);              // recursive; here 'mid' will translate to the chunk size inside the function
 } 
 ```
-Next, pb_all_check returns when there's only two values left in stk_a, and then flip_b is called for the first time, where `mid` is equal to 1 or 2 and is passed as an argument to flip_b to relay the `chunk size` to be considered in there.
+</details>
+
+
+### 2. `flip_b`: pa everything higher than midpoint
+
+The flipping-and-bouncing begins. By design, the first time this function is called, the `chunksz` will be 1 or 2. And each subsequent time it is called from pb_all_check, that number will increase.
+
+<details>
+	<summary>flip_b</summary>
 
 ```C
 void  flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
@@ -198,18 +235,26 @@ void  flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
   if (chunksz <= 2)
 
   // Recursive case:
-  pa_abovemid(&arr_ind[mid], chunksz - mid - 1, stk_a, stk_b);  // non-recursive
+  pa_abovemid(&arr_ind[mid], chunksz - mid - 1, stk_a, stk_b);  // non-recursive; this is where the 'flipping' happens
   flip_a(&arr_ind[mid + 1], chunksz - mid - 1, stk_a, stk_b);   // recursive
-  flip_b(arr_ind, restsz, stk_a, stk_b);                        // recursive
+  flip_b(arr_ind, restsz, stk_a, stk_b);                        // recursive; here 'restsz' will translate to the chunk size inside the function
 
   // pa_abovemid and its counterpart pa_belowmid are non-recursive. They just `pa` and `pb`
   // a number of elements above and below a given midpoint respectively.
 }
 ```
+</details>
+
+
+### 3. `flip_a`: pb everything lower than midpoint
+
 Compare the recursive cases of flip_b and flip_a. Note that:
 * flip_b is called from within flip_b to deal with the 'rest', i.e. the chunk values above and including the 'current' B pivot point
 * flip_a is called from within flip_a to deal with the 'rest', i.e. the chunk values above and including the 'current' A pivot point
 * also, somewhat surprisingly, notice the order in which flip_a and flip_b are called from within both functions - it's the same order
+
+<details>
+	<summary>flip_a</summary>
 
 ```C
 void  flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
@@ -221,10 +266,33 @@ void  flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
   if (chunksz <= 2)
 
   // Recursive case:
-  pb_belowmid(&arr_ind[mid], mid, stk_a, stk_b);  // non-recursive
+  pb_belowmid(&arr_ind[mid], mid, stk_a, stk_b);  // non-recursive; this is where the 'flipping' happens
   flip_a(&arr_ind[mid], restsz, stk_a, stk_b);    // recursive
-  flip_b(arr_ind, mid, stk_a, stk_b);             // recursive
+  flip_b(arr_ind, mid, stk_a, stk_b);             // recursive; here 'mid' will translate to the chunk size inside the function
 }
+```
+
+</details>
+
+
+
+
+## The Makefile
+
+This project encourages us to use libft. So it was high time I'd given thought to how I can add ft_printf and get_next_line to my libft. Since these two functions extend beyond the scope of Norminette-conform single .c files, I didn't want anything called *utilities.c* floating around my libft folder or listed in my libft's $(SRC), so instead I kept both ft_printf and get_next_line in their own subfolders, gave them appropriate Makefiles of their own, and had my libft Makefile 'make -C respectivesubfolders' and then extract the .o files into the libft folder, archiving the single-.c-file libft functions together with the ft_printf and get_next_line functions as such:
+
+```Make
+
+NAME := libft.a
+LIBFTPRINTFD := ./ft_printf
+GNLD := ./get_next_line
+
+$(NAME): $(OBJ)
+        make -C $(LIBFTPRINTFD) all
+        make -C $(GNLD) all
+        find $(LIBFTPRINTFD) -name "*.o" -exec cp {} . \;
+        find $(GNLD) -name "*.o" -exec cp {} . \;
+        ar rcs $(NAME) *.o
 ```
 
 
