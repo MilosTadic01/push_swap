@@ -6,13 +6,13 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 15:55:08 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:33:41 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 14:54:15 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	op_psh(t_list **stk_src, t_list **stk_dst)
+int	op_psh(t_list **stk_src, t_list **stk_dst, char dest_stk_name)
 {
 	t_list	*new_src_head;
 	t_list	*new_dst_head;
@@ -24,10 +24,14 @@ int	op_psh(t_list **stk_src, t_list **stk_dst)
 	new_dst_head->next = *stk_dst;
 	*stk_dst = new_dst_head;
 	*stk_src = new_src_head;
+	if (dest_stk_name == 'b')
+		ft_printf("pb\n");
+	else if (dest_stk_name == 'a')
+		ft_printf("pa\n");
 	return (1);
 }
 
-int	op_rot(t_list **stk)
+int	op_rot(t_list **stk, char stk_name)
 {
 	t_list	*newhead;
 	t_list	*oldlast;
@@ -39,10 +43,14 @@ int	op_rot(t_list **stk)
 	oldlast->next = *stk;
 	oldlast->next->next = NULL;
 	*stk = newhead;
+	if (stk_name == 'b')
+		ft_printf("rb\n");
+	else if (stk_name == 'a')
+		ft_printf("ra\n");
 	return (1);
 }
 
-int	op_swp(t_list **stk)
+int	op_swp(t_list **stk, char stk_name)
 {
 	t_list	*headcpy;
 	t_list	*newhead;
@@ -54,10 +62,14 @@ int	op_swp(t_list **stk)
 	headcpy->next = (*stk)->next->next;
 	newhead->next = headcpy;
 	*stk = newhead;
+	if (stk_name == 'b')
+		ft_printf("sb\n");
+	else if (stk_name == 'a')
+		ft_printf("sa\n");
 	return (1);
 }
 
-int	op_revrot(t_list **stk)
+int	op_revrot(t_list **stk, char stk_name)
 {
 	t_list	*newhead;
 	t_list	*snd2last;
@@ -72,5 +84,9 @@ int	op_revrot(t_list **stk)
 	newhead->next = *stk;
 	snd2last->next = NULL;
 	*stk = newhead;
+	if (stk_name == 'b')
+		ft_printf("rrb\n");
+	else if (stk_name == 'a')
+		ft_printf("rra\n");
 	return (1);
 }

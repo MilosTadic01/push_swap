@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:37:07 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/12 13:52:56 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:12:16 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,27 @@
 
 void	upto3_ifpos0(t_list **stk_a, t_list **stk_b)
 {
-	op_psh(stk_a, stk_b);
-	op_swp(stk_a);
-	op_psh(stk_b, stk_a);
-	ft_printf("pb\nsa\npa\n");
+	op_psh(stk_a, stk_b, 'b');
+	op_swp(stk_a, 'a');
+	op_psh(stk_b, stk_a, 'a');
 }
 
 void	upto3_ifpos1(int nxt, t_list **stk_a)
 {
 	if (nxt == 0)
-	{
-		op_swp(stk_a);
-		ft_printf("sa\n");
-	}
+		op_swp(stk_a, 'a');
 	else
-	{
-		op_rot(stk_a);
-		ft_printf("ra\n");
-	}
+		op_rot(stk_a, 'a');
 }
 
 void	upto3_ifpos2(int nxt, t_list **stk_a)
 {
 	if (nxt == 0)
-	{
-		op_revrot(stk_a);
-		ft_printf("rra\n");
-	}
+		op_revrot(stk_a, 'a');
 	else
 	{
-		op_swp(stk_a);
-		op_revrot(stk_a);
-		ft_printf("sa\nrra\n");
+		op_swp(stk_a, 'a');
+		op_revrot(stk_a, 'a');
 	}
 }
 

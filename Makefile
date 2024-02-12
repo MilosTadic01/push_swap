@@ -4,17 +4,14 @@ NAME	= push_swap
 SRCD	= ./source/
 BONUSD	= ./bonus/
 LIBFTD	= ./libft/
-SRC 	= push_swap.c \
+SRC 	= main.c \
 	  inputctrl_pt1.c \
 	  inputctrl_pt2.c \
 	  midpoint_sorting.c \
 	  sort_upto3.c \
-	  sorting.c \
-	  conds.c \
-	  conds_steps_a1.c \
-	  conds_steps_a2.c \
-	  conds_steps_b1.c \
-	  conds_steps_b2.c \
+	  flip_b.c \
+	  flip_a.c \
+	  flip_utils.c \
 	  operands.c \
 	  liberators.c
 BNAME	= checker
