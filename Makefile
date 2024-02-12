@@ -8,6 +8,7 @@ SRC 	= push_swap.c \
 	  inputctrl_pt1.c \
 	  inputctrl_pt2.c \
 	  midpoint_sorting.c \
+	  sort_upto3.c \
 	  sorting.c \
 	  conds.c \
 	  conds_steps_a1.c \

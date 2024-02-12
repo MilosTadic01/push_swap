@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/06 15:15:02 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 13:53:08 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ t_list	*init_stk(int *arr, int size);
 int	go_midpointing(int *arr_raw, int *arr_ind, int size);
 void	pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
 void	pb_all_engine(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b);
+
+// sort_upto3.c
+void	sort_upto3(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
+void	upto3_ifpos0(t_list **stk_a, t_list **stk_b);
+void	upto3_ifpos1(int nxt, t_list **stk_a);
+void	upto3_ifpos2(int nxt, t_list **stk_a);
 
 void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b);
 void	pa_abovemid(int *arr_ind, int howmny, t_list **stk_a, t_list **stk_b);

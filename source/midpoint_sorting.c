@@ -268,7 +268,10 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 	stk_b = NULL;
 	if (!stk_a || !isunsorted(stk_a, size))
 		return (clearstk(&stk_a, &stk_b, 0));
-	pb_all_check(arr_ind, size, &stk_a, &stk_b);
+	if (size <= 3)
+		sort_upto3(arr_ind, size, &stk_a, &stk_b);
+	else if (size > 3)
+		pb_all_check(arr_ind, size, &stk_a, &stk_b);
 	// while (stk_a) //
 	// {
 	// 	ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
