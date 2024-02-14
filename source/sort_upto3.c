@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 13:37:07 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/12 15:12:16 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:29:30 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,3 @@ void	sort_upto3(int *arr_ind, int size, t_list **stk_a, t_list **stk_b)
 	else if (pos == 2)
 		upto3_ifpos2(nxt, stk_a);
 }
-

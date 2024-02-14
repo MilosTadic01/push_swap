@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:03:00 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/12 15:20:58 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:29:54 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	flip_b_base(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
 	return ;
 }
 
-void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b) // recursive v.4
+void	flip_b(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
 {
 	int	mid;
 	int	restsz;

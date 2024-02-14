@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:29:19 by mitadic           #+#    #+#             */
-/*   Updated: 2024/01/31 16:45:32 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:33:48 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,6 @@ int	main(int argc, char **argv)
 		arr_raw = free_arrays(arr_raw, arr_ind);
 		return (3);
 	}
-	// if (!go_sorting(arr_raw, arr_ind, size))
-	// {
-	// 	arr_raw = free_arrays(arr_raw, arr_ind);
-	// 	return (3);
-	// }
 	free_arrays(arr_raw, arr_ind);
 	return (0);
 }

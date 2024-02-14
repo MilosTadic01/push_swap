@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 18:56:40 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/12 15:15:25 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:32:38 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_bubble_sort(int *arr, int size);
 int		buffover_str(const char *nptr);
 
 // midpoint_sorting.c
-int	go_midpointing(int *arr_raw, int *arr_ind, int size);
+int		go_midpointing(int *arr_raw, int *arr_ind, int size);
 void	pb_all_check(int *arr_ind, int size, t_list **stk_a, t_list **stk_b);
 void	pb_all_engine(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b);
 
@@ -52,8 +52,8 @@ void	flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b);
 void	pb_belowmid(int *arr_ind, int howmny, t_list **stk_a, t_list **stk_b);
 
 // flip_utils.c
-int	isunsorted(t_list *stk, int chunksz);
-int	isrevunsorted(t_list *stk, int chunksz);
+int		isunsorted(t_list *stk, int chunksz);
+int		isrevunsorted(t_list *stk, int chunksz);
 void	prt_stcks(t_list *a, t_list *b, int midval);
 void	ft_sortsmall(t_list **stk_a);
 

@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:03:18 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/12 15:10:11 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:34:57 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void	pb_all_engine(int *arr_ind, int mid, t_list **stk_a, t_list **stk_b)
 	int	i;
 
 	i = -1;
-	while(++i < mid)
-	{	
+	while (++i < mid)
+	{
 		if ((*(int *)(*stk_a)->content) < arr_ind[mid])
 			op_psh(stk_a, stk_b, 'b');
 		else if (*(int *)ft_lstlast(*stk_a)->content < arr_ind[mid])
@@ -68,17 +68,5 @@ int	go_midpointing(int *arr_raw, int *arr_ind, int size)
 		sort_upto3(arr_ind, size, &stk_a, &stk_b);
 	else if (size > 3)
 		pb_all_check(arr_ind, size, &stk_a, &stk_b);
-	while (stk_a) //
-	{
-		ft_printf("Content stk_a: %i\n", *(int *)stk_a->content); //
-		stk_a = stk_a->next; //
-	} //
-	while (stk_b) //
-	{
-		ft_printf("Content stk_b: %i\n", *(int *)stk_b->content); //
-		stk_b = stk_b->next; //
-	} //
-	if (!isunsorted(stk_a, INT_MAX))
-		ft_printf("OK\n");
 	return (clearstk(&stk_a, &stk_b, 1));
 }

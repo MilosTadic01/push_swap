@@ -102,7 +102,7 @@ int	main(int argc, char **argv)
 		return (error_message(2));
 	instrset = getinstr(size);
 	if (!instrset)
-		return (error_message(2));
+		return (2);
 	if (!go_sorting(arr_raw, instrset, size)) 
 		ft_printf("KO\n");
 	else

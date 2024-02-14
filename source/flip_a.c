@@ -6,7 +6,7 @@
 /*   By: mitadic <mitadic@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:03:27 by mitadic           #+#    #+#             */
-/*   Updated: 2024/02/12 15:06:00 by mitadic          ###   ########.fr       */
+/*   Updated: 2024/02/12 15:30:37 by mitadic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
 		return ;
 	}
 	if (!isunsorted(*stk_a, chunksz))
-			return ;
+		return ;
 	pb_belowmid(&arr_ind[mid], mid, stk_a, stk_b);
 	flip_a(&arr_ind[mid], restsz, stk_a, stk_b);
 	flip_b(arr_ind, mid, stk_a, stk_b);
