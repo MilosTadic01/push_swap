@@ -279,7 +279,7 @@ void  flip_a(int *arr_ind, int chunksz, t_list **stk_a, t_list **stk_b)
 
 ## The Makefile
 
-This project encourages us to use libft. So it was high time I'd given thought to how I can add ft_printf and get_next_line to my libft. Since these two functions extend beyond the scope of Norminette-conform single .c files, I didn't want anything called *utilities.c* floating around my libft folder or listed in my libft's $(SRC), so instead I kept both ft_printf and get_next_line in their own subfolders, gave them appropriate Makefiles of their own, and had my libft Makefile 'make -C respectivesubfolders' and then extract the .o files into the libft folder, archiving the single-.c-file libft functions together with the ft_printf and get_next_line functions as such:
+This project encourages us to use libft. So it was high time I'd given thought to how I can add ft_printf and get_next_line to my libft. Since these two functions extend beyond the scope of Norminette-conform single .c files, I didn't want anything called *utilities.c* floating around my libft folder or listed in my libft's $(SRC), so instead I kept both ft_printf and get_next_line in their own subfolders, gave them appropriate Makefiles of their own, and had my libft Makefile 'make -C respectivesubfolders' and then extract the .o files into the libft folder, archiving the single-*.c-file libft functions together with the ft_printf and get_next_line functions as such:
 
 ```Make
 
